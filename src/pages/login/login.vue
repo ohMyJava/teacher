@@ -1,0 +1,122 @@
+<template>
+    <div class="loginBox">
+      <el-container>
+        <el-main>
+          <div class="login-logo">
+            <img src="../../../static/tom.jpg" height="220px" style="border-radius: 110px">
+          </div>
+          <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="form.username"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="form.password" show-password></el-input>
+            </el-form-item>
+            <el-form-item label="用户类型" prop="type">
+              <el-radio-group v-model="form.type">
+              <el-radio label="1" >用户</el-radio>
+              <el-radio label="2">管理员</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="login('form')">登录</el-button>
+              <el-button type="primary" @click="reg">注册</el-button>
+            </el-form-item>
+          </el-form>
+        </el-main>
+      </el-container>
+    </div>
+</template>
+
+<script>
+    export default {
+      beforeRouteEnter:(to,from,next)=>{
+        //组件内守卫
+        //已登录状态回到登录页面，即登出
+        next(vm=>{
+          vm.$store.dispatch("setUser",null);
+        });
+      },
+        name: "login",
+        data(){
+          return{
+            form:{
+              username:'',
+              password:'',
+              type:'',
+            },
+            rules:{
+              username:[
+                {required:true,message:'请输入用户名',trigger:['blur','change']},
+                {min:5,max:10,message:'长度在5到10个字符',trigger:['blur','change']}
+              ],
+              password:[
+                {required:true,message:'请输入密码',trigger:'blur'}
+              ],
+              type:[
+                {required:true,message:'请选择登陆类型',trigger:'change'}
+              ],
+            }
+          }
+        },
+      methods:{
+        login(formName){
+          this.$refs[formName].validate(async (valid)=>{
+            let username=this.form.username;
+            let password=this.form.password;
+            let type=this.form.type;
+            console.log("getted:"+username+"   "+password+"    "+type);
+            if (valid) {
+              const ret = await this.$axios.post('user/login', {username:username,password:password,type:type});
+              if(ret.data.flag === 'true') {
+                this.$message.success({
+                  message:"登录成功",
+                  showClose:true,
+                });
+                //将用户名和token放入sessionStorage
+                sessionStorage.setItem("userName",ret.data.username);
+                sessionStorage.setItem("userToken",ret.data.token);
+                //将用户名放入vuex
+                this.$store.dispatch("setUser",ret.data.username);
+                this.$store.dispatch("setToken",ret.data.token);
+                //打印login状态
+                console.log(this.$store.state.isLogin);
+                if (type === '1') {
+                  this.$router.push('/');
+                }else if (type === '2') {
+                  this.$router.push('/admin');
+                }
+              }
+            }else {
+              alert('failed');
+              return false;
+            }
+          })
+        },
+        reg:function () {
+          alert("正在打开注册页面！");
+          let routerUrl=this.$router.resolve({
+            path:'/reg',
+          });
+          window.open(routerUrl .href, '_blank');
+        },
+      }
+    }
+</script>
+
+<style scoped>
+.loginBox{
+  background-color: burlywood;
+  border-radius: 10px;
+}
+.login-logo{
+  height: 220px;
+  width: 220px;
+  border: 1px solid #ddd;
+  border-radius: 110px;
+  position: absolute;
+  left: 30%;
+  top: 30%;
+  transform: translate(0,-120%);
+}
+</style>
