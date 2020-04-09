@@ -47,25 +47,31 @@ export default {
           index: "0",
           icon: "el-icon-setting",
           name: "学生管理",
-          link: "student"
+          link: "/admin/student"
         },
         {
           index: "1",
           icon: "el-icon-setting",
           name: "家教管理",
-          link: "teacher"
+          link: "/admin/teacher"
         },
         {
           index: "2",
           icon: "el-icon-setting",
           name: "订单管理",
-          link: "order"
+          link: "/admin/order"
         },
         {
           index: "3",
           icon: "el-icon-setting",
+          name: "用户管理",
+          link: "/admin/user"
+        },
+        {
+          index: "4",
+          icon: "el-icon-setting",
           name: "系统管理",
-          link: "system"
+          link: "/admin/system"
         }
       ]
     };

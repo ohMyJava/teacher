@@ -85,6 +85,11 @@ export default new Router({
           path: "/admin/system",
           name: "system",
           component: () => import("../pages/cms/system")
+        },
+        {
+          path: "/admin/user",
+          name: "user",
+          component: () => import("../pages/cms/system")
         }
       ]
     }
