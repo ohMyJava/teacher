@@ -1,34 +1,28 @@
 <template>
-  <div class="loginBox">
-    <el-container>
-      <el-main>
-        <div class="login-logo">
-          <img
-            src="../../../static/tom.jpg"
-            height="220px"
-            style="border-radius: 110px"
-          />
-        </div>
+  <div>
+    <el-row>
+      <el-col :xs="0" :sm="10" :md="10" :lg="10" :xl="10">&nbsp;</el-col>
+      <el-col :xs="24" :sm="14" :md="14" :lg="14" :xl="14" class="login-box">
         <el-form ref="form" :model="form" label-width="100px" :rules="rules">
-          <el-form-item label="用户名" prop="username">
+          <el-form-item label="用户名：" prop="username">
             <el-input v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password">
+          <el-form-item label="密      码：" prop="password">
             <el-input v-model="form.password" show-password></el-input>
           </el-form-item>
-          <el-form-item label="用户类型" prop="type">
+          <el-form-item label="用户类型：" prop="type">
             <el-radio-group v-model="form.type">
               <el-radio label="1">用户</el-radio>
               <el-radio label="2">管理员</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="login('form')">登录</el-button>
-            <el-button type="primary" @click="reg">注册</el-button>
+            <el-button type="primary" round="true" @click="login('form')">登录</el-button>
+            <el-button type="primary" round="true" @click="reg">注册</el-button>
           </el-form-item>
         </el-form>
-      </el-main>
-    </el-container>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -76,7 +70,7 @@ export default {
         let type = this.form.type;
         console.log("getted:" + username + "   " + password + "    " + type);
         if (valid) {
-          const ret = await this.$axios.post("user/login", {
+          const ret = await this.$axios.post("/api/user/login", {
             username: username,
             password: password,
             type: type
@@ -118,18 +112,10 @@ export default {
 </script>
 
 <style scoped>
-.loginBox {
-  background-color: burlywood;
-  border-radius: 10px;
-}
-.login-logo {
-  height: 220px;
-  width: 220px;
-  border: 1px solid #ddd;
-  border-radius: 110px;
-  position: absolute;
-  left: 30%;
-  top: 30%;
-  transform: translate(0, -120%);
-}
+  .login-box{
+    padding:20px 40px 5px 5px;
+    background-color: #E8E8FF;
+    border-radius: 20px;
+  }
+
 </style>

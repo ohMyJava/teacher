@@ -91,7 +91,7 @@ export default {
       }
     },
     menuWidth() {
-      return this.menuShow ? "65px" : "240px";
+      return this.menuShow ? "65px" : "160px";
     }
   }
 };

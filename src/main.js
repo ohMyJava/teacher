@@ -17,8 +17,9 @@ Vue.use(axios); // 这样就把axios注册到当前的项目里了
 Vue.use(ElementUI); // ElementUi就注册进去了
 // 看着文档用element的组件就可以了
 Vue.prototype.$axios = axios;
-axios.defaults.baseURL = 'http://localhost:8888';  // 假设你的后端跑在8000端口
-//axios.defaults.withCredentials = false;
+//axios.defaults.headers.post['Content-Type'] = 'application/json';
+//axios.defaults.baseURL = 'http://localhost:8888';  // 假设你的后端跑在8000端口
+axios.defaults.withCredentials = false;
 // 这样在vue文件里 就可以通过this.$axios来使用它了
 Vue.use(Vuex);
 

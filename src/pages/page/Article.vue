@@ -1,6 +1,8 @@
 <template>
     <div>
-      this is article!
+      <div style="height: 500px;">
+        this is article!
+      </div>
     </div>
 </template>
 
