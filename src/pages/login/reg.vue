@@ -37,8 +37,7 @@
 </template>
 
 <script>
-  import Admin from "../../components/Admin"
-
+  import * as validate from '../../assets/js/validate'
     export default {
         name: "reg",
       data(){
@@ -55,10 +54,11 @@
             rules: {
               userName:[
                 {required:true,message:'请输入用户名',trigger:['blur','change']},
-                {min:5,max:10,message:'长度在5到10个字符',trigger:['blur','change']}
+                {validator:validate.uniqueUserName,trigger:'blur'}
               ],
               password:[
-                {required:true,message:'请输入密码',trigger:'blur'}
+                {required:true,message:'请输入密码',trigger:'blur'},
+                {min:6,max:12,message:'密码长度为6-12位',trigger:'change'}
               ],
               name:[
                 {required:true,message:'请输入姓名',trigger:'blur'}
@@ -71,7 +71,7 @@
               ],
               phoneNumber:[
                 {required:true,message:'请输入手机号',trigger:'blur'},
-                {min:11,max:11,message:'请正确输入手机号',trigger:'blur'}
+                {validator:validate.isPhoneNumber,trigger:'blur'}
               ],
             }
           }

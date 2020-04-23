@@ -8,7 +8,21 @@
             <el-input v-model="addList.studentAge" placeholder="请输入学生年龄"></el-input>
           </el-form-item>
           <el-form-item label="用户账号" prop="userName">
-            <el-input v-model="addList.userName" placeholder="请输入用户账号"></el-input>
+            <el-select
+              v-model="addList.userName"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="remoteMethod"
+              :loading="loading">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="学生性别" prop="studentSex">
             <el-radio-group v-model="addList.studentSex">
@@ -63,98 +77,127 @@
 </template>
 
 <script>
+  import * as validate from '../assets/js/validate';
     export default {
-        name: "EditStudent",
-      data(){
-          return{
-            inputVisible: false,
-            inputValue: '',
-            addList:{
-              studentName:'',
-              studentAge:'',
-              studentSex:'',
-              studentGrade:'',
-              studentSubject:'',
-              phoneNumber:'',
-              tags:['语文','数学'],
-              expectTutorAble:'',
-              expectTutorLocation:'',
-              studentHobby:'',
-              userName:'',
-            },
-            gradeList:[
-              {title:'小学一年级'},
-              {title:'小学二年级'},
-              {title:'小学三年级'},
-              {title:'小学四年级'},
-              {title:'小学五年级'},
-              {title:'小学六年级'},
-              {title:'初中中一年级'},
-              {title:'初中二年级'},
-              {title:'初中三年级'},
-              {title:'高中一年级'},
-              {title:'高中二年级'},
-              {title:'高中三年级'},
-              {title:'大学'},
-              {title:'其他'},
+      name: "EditStudent",
+      data() {
+        return {
+          message:'',
+          options: [],
+          list: [],
+          loading: false,
+          states: [],
+          inputVisible: false,
+          inputValue: '',
+          addList: {
+            studentName: '',
+            studentAge:'',
+            studentSex: '',
+            studentGrade: '',
+            studentSubject: '',
+            phoneNumber: '',
+            tags: [],
+            expectTutorAble: '',
+            expectTutorLocation: '',
+            studentHobby: '',
+            userName: '',
+          },
+          gradeList: [
+            {title: '小学一年级'},
+            {title: '小学二年级'},
+            {title: '小学三年级'},
+            {title: '小学四年级'},
+            {title: '小学五年级'},
+            {title: '小学六年级'},
+            {title: '初中中一年级'},
+            {title: '初中二年级'},
+            {title: '初中三年级'},
+            {title: '高中一年级'},
+            {title: '高中二年级'},
+            {title: '高中三年级'},
+            {title: '大学'},
+            {title: '其他'},
+          ],
+          rules: {
+            studentName: [
+              {required: true, message: '请输入姓名', trigger: 'blur'}
             ],
-            rules:{
-              studentName:[
-                {required:true,message:'请输入姓名',trigger:'blur'}
-              ],
-              studentSex:[
-                {required:true,message:'请选择性别',trigger:'change'}
-              ],
-              studentAge:[
-                {required:true,message:'请选择年龄',trigger:'change'}
-              ],
-              phoneNumber:[
-                {required:true,message:'请输入手机号',trigger:'blur'},
-                {min:11,max:11,message:'请正确输入手机号',trigger:'blur'}
-              ],
-              studentGrade:[
-                {required:true,message:'请选择年级',trigger:'change'}
-              ],
-              studentSubject:[
-                {required:true,message:'请选择文理科',trigger:'change'}
-              ],
-              userName:[
-                {required:true,message:'请输入用户姓名',trigger:'blur'}
-              ],
-              expectTutorLocation:[
-                {required:true,message:'请输入家教地点',trigger:'blur'}
-              ],
-              tags:[
-                {required:true,message:'至少添加一个标签',trigger:'blur'}
-              ],
-            },
-          }
+            studentSex: [
+              {required: true, message: '请选择性别', trigger: 'change'}
+            ],
+            studentAge: [
+              {required: true, message: '请输入年龄', trigger: 'change'},
+              {validator:validate.isLegalAge,trigger:'blur'}
+            ],
+            phoneNumber: [
+              {required: true, message: '请输入手机号', trigger: 'blur'},
+              {validator: validate.isPhoneNumber, trigger: 'blur'}
+            ],
+            studentGrade: [
+              {required: true, message: '请选择年级', trigger: 'change'}
+            ],
+            studentSubject: [
+              {required: true, message: '请选择文理科', trigger: 'change'}
+            ],
+            userName: [
+              {required: true, message: '请输入学生关联的用户名', trigger: 'change'},
+              {validator: validate.isTrueUserName, trigger: 'blur'}
+            ],
+            expectTutorLocation: [
+              {required: true, message: '请输入家教地点', trigger: 'blur'}
+            ],
+            tags: [
+              {required: true, message: '至少添加一个标签', trigger: 'blur'}
+            ],
+          },
+        }
       },
-      methods:{
-        check(){
-          this.$refs['form'].validate(async valid=>{
+      beforeCreate(){
+        console.log("beforeCreate");
+      },
+      async created() {
+        console.log("created");
+        /*可以不在这里执行*/
+        let response=await this.$axios.get('/api/user/getUsernameList');
+        if (response.data.code === '6666') {
+          this.states=response.data.data;
+        }else {
+          this.states=['无数据']
+        }
+        this.list = this.states.map(item => {
+          return {value: `${item}`, label: `${item}`};
+        });
+      },
+      methods: {
+        check() {
+          this.$refs['form'].validate(async valid => {
             if (valid) {
-              this.addList.expectTutorAble=this.addList.tags.join(",");
-              var res=await this.$axios.post('/api/student/addStudent',JSON.stringify(this.addList),{headers:{'content-type':'application/json'}});
+              this.addList.expectTutorAble = this.addList.tags.join(",");
+              var res = await this.$axios.post('/api/student/addStudent', JSON.stringify(this.addList), {headers: {'content-type': 'application/json'}});
               if (res.data.code === '6666') {
-                this.$message.success("添加的学生为："+this.addList.studentName);
-                this.addList=[];
-                return "1"
-              }else {
-                this.$message.warning(res.data.message);
-                return "0";
+                this.$message.success("添加的学生为：" + this.addList.studentName);
+                this.addList = [];
+                this.$emit('getMessage',true);
+              } else {
+                this.$message.error(res.data.message);
+                this.$emit('getMessage',false);
               }
+            }else {
+              this.$message.warning("请输入正确信息！");
             }
           })
         },
-        async getVal(id){
-          let res=await this.$axios.get('/api/student/getOneStudent?studentId='+id);
-          let resp=await this.$axios.get('/api/student/studentBindingUser')
-          this.addList=res.data.data;
-
-          return this.addList;
+        /*不了解getVal方法中注释中与非注释中的语句对tag标签删除操作的影响的原因*/
+        async getVal(id) {
+          let res = await this.$axios.get('/api/student/getOneStudent?studentId=' + id);
+          const list=res.data.data;
+          list.tags=res.data.data.expectTutorAble.split(",");
+          this.addList=list;
+         /* this.addList = res.data.data;
+          this.addList.tags=this.addList.expectTutorAble.split(",");*/
         },
         tagClose(tag) {
+          console.log("closeTag")
           this.addList.tags.splice(this.addList.tags.indexOf(tag), 1);
         },
 
@@ -169,8 +212,45 @@
           if (inputValue) {
             this.addList.tags.push(inputValue);
           }
+          console.log(inputValue)
           this.inputVisible = false;
           this.inputValue = '';
+        },
+        modifyStudent(id) {
+          this.$refs['form'].validate(async valid=>{
+            if (valid) {
+              this.addList.studentId = id;
+              console.log(this.addList.tags);
+              this.addList.expectTutorAble = this.addList.tags.join(",");
+              console.log(this.addList.expectTutorAble);
+              let res = await this.$axios.post('/api/student/modifyStudent', JSON.stringify(this.addList), {headers: {'content-type': 'application/json'}});
+              if (res.data.code === '6666') {
+                this.$message.success(res.data.message);
+                this.addList = [];
+                this.$emit('getMessage',true);
+              } else {
+                this.$message.warning(res.data.message);
+                this.$emit('getMessage',false);
+              }
+            }else {
+              this.$message.error("请输入正确信息！");
+            }
+          })
+          /**/
+        },
+        remoteMethod(query) {
+          if (query !== '') {
+            this.loading = true;
+            setTimeout(() => {
+              this.loading = false;
+              this.options = this.list.filter(item => {
+                return item.label.toLowerCase()
+                  .indexOf(query.toLowerCase()) > -1;
+              });
+            }, 200);
+          } else {
+            this.options = [];
+          }
         },
 
       }
