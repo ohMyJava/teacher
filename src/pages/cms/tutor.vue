@@ -1,5 +1,9 @@
 <template>
-  <div>Teacher</div>
+  <div>Teacher
+  <el-row>
+    <el-col :xs="11" style="background-color: red">a</el-col>
+  </el-row>
+  </div>
 </template>
 
 <script>

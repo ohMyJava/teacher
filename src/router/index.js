@@ -74,7 +74,7 @@ export default new Router({
         {
           path: "/admin/teacher",
           name: "teacher",
-          component: () => import("../pages/cms/teacher")
+          component: () => import("../pages/cms/tutor")
         },
         {
           path: "/admin/order",
