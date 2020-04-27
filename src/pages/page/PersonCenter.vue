@@ -1,7 +1,7 @@
 <template>
     <div>
       <el-container>
-        <el-aside >
+        <el-aside :width="'20%'">
           <el-menu
             router
             :default-active="$route.path"
@@ -37,7 +37,7 @@
             </component>
           </el-menu>
         </el-aside>
-        <el-main style="background-color: #FFFFCC"><router-view></router-view></el-main>
+        <el-main style="background-color: #FFFFCC;width: 80%"><router-view></router-view></el-main>
       </el-container>
     </div>
 </template>
@@ -95,10 +95,6 @@
 </script>
 
 <style scoped>
-el-aside{
-  width: 200px;
-  background-color: #ffffff;
-}
   .el-container{
     min-height: 400px;
   }

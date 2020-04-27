@@ -1,7 +1,7 @@
 <template>
     <div class="body">
       <el-container>
-        <el-header>
+        <el-header height="70px">
           <div class="headerWrapper">
               <div class="header">
                 <el-row>
@@ -151,10 +151,11 @@
   }
   @media screen and (max-width:945px){
     .el-menu-item{
-      font-size: 10px;
+      font-size: 13px;
       padding: 0 10px;
     }
   }
+
   .container{
     margin-top: -70px;
     padding: 80px 0 280px;
