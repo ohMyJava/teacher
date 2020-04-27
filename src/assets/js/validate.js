@@ -54,6 +54,17 @@ export const isLegalAge=(rule,value,callback)=>{
     callback();
   }
 };
+/*是否为姓名*/
+export const isTrueName=(rule,value,callback)=>{
+  let reg=RegExp('[\u4e00-\u9fa5]');
+  if (!reg.test(value)){
+    return callback(new Error("请输入中文"));
+  } else if (value.length > 20 || value.length < 2) {
+    return callback(new Error("请输入真实姓名！"))
+  }else {
+    callback();
+  }
+};
 
 
 

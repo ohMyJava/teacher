@@ -61,7 +61,8 @@
                 {min:6,max:12,message:'密码长度为6-12位',trigger:'change'}
               ],
               name:[
-                {required:true,message:'请输入姓名',trigger:'blur'}
+                {required: true, message: '请输入姓名', trigger: 'blur'},
+                {validator: validate.isTrueName(), trigger: 'blur'}
               ],
               sex:[
                 {required:true,message:'请选择性别',trigger:'change'}

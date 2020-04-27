@@ -1,7 +1,7 @@
 <template>
     <div>
       <el-container>
-        <el-aside width="200px" style="height: 500px">
+        <el-aside >
           <el-menu
             router
             :default-active="$route.path"
@@ -95,5 +95,11 @@
 </script>
 
 <style scoped>
-
+el-aside{
+  width: 200px;
+  background-color: #ffffff;
+}
+  .el-container{
+    min-height: 400px;
+  }
 </style>

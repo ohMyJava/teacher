@@ -1,0 +1,136 @@
+<template>
+    <div>
+      <el-row>
+        <el-table
+          ref="multipleTable"
+          :data="orderData"
+          tooltip-effect="dark"
+          style="width: 100%"
+          :max-height="400"
+          :row-style="{height:'20px'}"
+          :cell-style="{padding:'5px 0'}"
+          size="medium"
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            prop="serial"
+            label="编号">
+          </el-table-column>
+          <el-table-column
+            prop="time"
+            label="时间">
+          </el-table-column>
+          <el-table-column
+            prop="studentName"
+            label="学生姓名">
+          </el-table-column>
+          <el-table-column
+            prop="tutorName"
+            label="家教姓名">
+          </el-table-column>
+          <el-table-column
+            prop="cost"
+            label="价格">
+          </el-table-column>
+        </el-table>
+      </el-row>
+      <el-row>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          background
+          :current-page.sync="currentPage"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size.sync="limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </el-row>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "OrderTable",
+      data(){
+          return{
+            multipleSelection:[],
+            orderData: [
+              {
+                serial:'0001',
+                time:'2020-04-24',
+                studentName:'张三',
+                tutorName:'家教',
+                cost:'￥90'
+              },
+              {
+                serial:'0001',
+                time:'2020-04-24',
+                studentName:'张三',
+                tutorName:'家教',
+                cost:'￥90'
+              },
+              {
+                serial:'0001',
+                time:'2020-04-24',
+                studentName:'张三',
+                tutorName:'家教',
+                cost:'￥90'
+              },
+              {
+                serial:'0001',
+                time:'2020-04-24',
+                studentName:'张三',
+                tutorName:'家教',
+                cost:'￥90'
+              },
+              {
+                serial:'0001',
+                time:'2020-04-24',
+                studentName:'张三',
+                tutorName:'家教',
+                cost:'￥90'
+              },
+              {
+                serial:'0001',
+                time:'2020-04-24',
+                studentName:'张三',
+                tutorName:'家教',
+                cost:'￥90'
+              },
+
+            ],
+            total: 0,
+            currentPage: 1,
+            limit: 10,
+          }
+      },
+      methods:{
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        handleSizeChange(val) {
+          console.log(`每页 ${val} 条`);
+          this.getAdminList();
+        },
+        handleCurrentChange(val) {
+          console.log(`当前页: ${val}`);
+          this.getAdminList();
+        },
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+        }
+      }
+    }
+</script>
+
+<style scoped>
+
+</style>

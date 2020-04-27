@@ -1,12 +1,12 @@
 <template>
     <div>
-      <h3>学生中心</h3>
+      <h3>家教信息编辑框</h3>
     </div>
 </template>
 
 <script>
     export default {
-        name: "StuCenter"
+        name: "EditTutorForm"
     }
 </script>
 

@@ -1,12 +1,22 @@
 <template>
     <div>
-      <h3>我的订单页面</h3>
+      <order-table></order-table>
     </div>
 </template>
 
 <script>
+  import orderTable from '../../../components/OrderTable'
     export default {
-        name: "order"
+        name: "order",
+      data(){
+          return{
+
+          }
+      },
+      methods:{},
+      components:{
+          orderTable
+      }
     }
 </script>
 

@@ -3,31 +3,46 @@
       <el-container>
         <el-header>
           <div class="headerWrapper">
-            <el-row>
               <div class="header">
-                <el-col :xs="8" :sm="5" :md="5" :lg="5" :xl="5">
-                  <a href="/"><img style="height: 80px;width: auto" src="../../static/logo.png" ></a>
-                </el-col>
-                <el-col :xs="0" :sm="4" :md="4" :lg="4" :xl="4">&nbsp;</el-col>
-                <el-col :xs="15" :sm="14" :md="14" :lg="14" :xl="14">
-                  <el-menu
-                    router
-                    :default-active="activeIndex"
-                    class="el-menu-demo"
-                    mode="horizontal"
-                    @select="handleSelect"
-                    text-color="#1989fa"
-                    active-text-color="#fdee02">
-                    <el-menu-item index="/article">公告中心</el-menu-item>
-                    <el-menu-item index="/tutorCenter">家教中心</el-menu-item>
-                    <el-menu-item index="/stuCenter">学生中心</el-menu-item>
-                    <el-menu-item index="/personCenter">个人中心</el-menu-item>
-                    <el-menu-item index="/login" v-show="!isLogin">登录/注册</el-menu-item>
-                    <el-menu-item index="/login" v-show="isLogin">[退出]</el-menu-item>
-                  </el-menu>
-                </el-col>
+                <el-row>
+                  <el-col :xs="0" :sm="5" :md="5" :lg="5" :xl="5">
+                    <a href="/"><img id="logo" src="../../static/logo.png" ></a>
+                  </el-col>
+                  <!-- 空白区域 -->
+                  <el-col :xs="0" :sm="4" :md="3" :lg="5" :xl="5">&nbsp;</el-col>
+                  <el-col :xs="24" :sm="15" :md="14" :lg="13" :xl="13">
+                    <el-menu
+                      router
+                      :default-active="active()"
+                      class="el-menu-demo"
+                      mode="horizontal"
+                      text-color="#1989fa"
+                      active-text-color="#fdee02">
+                      <!--<el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+                        <el-menu-item index="/article">公告中心</el-menu-item>
+                      </el-col>-->
+                      <el-menu-item index="/article">
+                        <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">公告中心</el-col>
+                      </el-menu-item>
+                      <el-menu-item index="/tutorCenter">
+                        <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">家教中心</el-col>
+                      </el-menu-item>
+                      <el-menu-item index="/stuCenter">
+                        <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">学生中心</el-col>
+                      </el-menu-item>
+                      <el-menu-item index="/personCenter">
+                        <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">个人中心</el-col>
+                      </el-menu-item>
+                      <el-menu-item index="/login" v-show="!isLogin">
+                        <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">登录/注册</el-col>
+                      </el-menu-item>
+                      <el-menu-item index="/login" v-show="isLogin">
+                        <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">[退出]</el-col>
+                      </el-menu-item>
+                    </el-menu>
+                  </el-col>
+                </el-row>
               </div>
-            </el-row>
           </div>
         </el-header>
         <el-main>
@@ -68,10 +83,8 @@
       // 页面中用到的data
       data() {
           return {
-            activeIndex: '/article',
             fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
             url: '../../static/tom.jpg',
-
             activeName: 'second',
           }
       },
@@ -80,8 +93,13 @@
       },
       // 页面中用到的方法
       methods: {
-        handleSelect(key, keyPath) {
-          console.log(key, keyPath);
+        active(){
+          let r=this.$route.path;
+          if (r.indexOf('personCenter')!==-1) {
+            return '/personCenter'
+          }else {
+            return r;
+          }
         }
       },
       computed:{
@@ -107,15 +125,19 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 80px;
+    height: 70px;
     width: 100%;
-    line-height: 80px;
+    line-height: 70px;
     display: block;
   }
   .header{
-    height: 80px;
-    margin: 0 20px;
+    height: 70px;
+    margin: 0 50px;
     border-bottom: 1px solid #dcdfe6;
+  }
+  #logo{
+    height: 70px;
+    width: auto;
   }
   .el-menu-demo{
     float: right;
@@ -123,8 +145,8 @@
   }
   .el-menu-item{
     font-size: 15px;
-    height: 80px;
-    line-height: 80px;
+    height: 70px;
+    line-height: 70px;
     padding: 0 20px;
   }
   @media screen and (max-width:945px){
@@ -134,7 +156,7 @@
     }
   }
   .container{
-    margin-top: -80px;
+    margin-top: -70px;
     padding: 80px 0 280px;
     box-sizing: border-box;
     min-height: 100%;

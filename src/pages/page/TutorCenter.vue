@@ -1,10 +1,13 @@
 <template>
-    <div>333</div>
+ <div>
+   <h3>家教中心</h3>
+ </div>
 </template>
 
 <script>
     export default {
-        name: "TutorCenter"
+        name: "TutorCenter",
+
     }
 </script>
 

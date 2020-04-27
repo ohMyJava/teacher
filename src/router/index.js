@@ -12,7 +12,13 @@ import Admin from "../pages/cms/Admin";
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
+    {
+      path: "*",
+      name: "error",
+      component:()=>import('../pages/page/Error')
+    },
     {
       path: "/",
       name: "Index",
