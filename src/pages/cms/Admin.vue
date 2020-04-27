@@ -6,26 +6,44 @@
         :class="menuIconClass"
         style="float: left; line-height: 60px"
       ></i>
-      <span style="margin-right: 10px">Admin</span>
+      <span style="margin-right: 10px">管理员用户名</span>
       <i class="el-icon-remove-outline" style="margin-right: 15px"></i>
     </el-header>
     <el-container style="height: 100%">
       <el-aside :width="menuWidth" style="height: 100%">
         <el-menu
-          :default-active="currentIndex"
+          router
+          :default-active="$route.path"
           class="el-menu-vertical-demo"
           style="height: 100%"
           :collapse="menuShow"
+          active-text-color="#409eff"
+          unique-opened
         >
-          <el-menu-item
-            v-for="menu in menus"
-            :key="menu.index"
-            :index="menu.index"
-            @click="$router.push(menu.link)"
-          >
-            <i :class="[menu.icon]"></i>
-            <span slot="title">{{ menu.name }}</span>
-          </el-menu-item>
+          <component
+            class="menu-item"
+            v-for="(value) in menus"
+            :key="value.name+value.link"
+            :index="value.link"
+            :is="(value.children&&value.children.length>0?'el-submenu':'el-menu-item')">
+            <template slot="title" v-if="value.children&&value.children.length>0">
+              <i :class="[value.icon]"></i>
+              <span slot="title">{{ value.name }}</span>
+            </template>
+            <div v-if="!(value.children&&value.children.length)">
+              <i :class="[value.icon]"></i>
+              <span slot="title">{{ value.name }}</span>
+            </div>
+            <template v-if="value.children&&value.children.length>0">
+              <el-menu-item class="menu-item"
+                            v-for="(v,i) in value.children"
+                            :key="v.link+i"
+                            :index="v.link">
+                <i :class="[v.icon]"></i>
+                <span slot="title">{{ v.name }}</span>
+              </el-menu-item>
+            </template>
+          </component>
         </el-menu>
       </el-aside>
       <el-container>
@@ -45,25 +63,25 @@ export default {
       menus: [
         {
           index: "0",
-          icon: "el-icon-setting",
+          icon: "el-icon-user",
           name: "学生管理",
           link: "/admin/student"
         },
         {
           index: "1",
-          icon: "el-icon-setting",
+          icon: "el-icon-s-custom",
           name: "家教管理",
           link: "/admin/teacher"
         },
         {
           index: "2",
-          icon: "el-icon-setting",
+          icon: "el-icon-tickets",
           name: "订单管理",
           link: "/admin/order"
         },
         {
           index: "3",
-          icon: "el-icon-setting",
+          icon: "el-icon-user-solid",
           name: "用户管理",
           link: "/admin/user"
         },
@@ -71,8 +89,28 @@ export default {
           index: "4",
           icon: "el-icon-setting",
           name: "系统管理",
-          link: "/admin/system"
-        }
+          link: "/admin/system",
+          children:[
+            {
+              index: "4-1",
+              icon: "el-icon-s-check",
+              name: "角色管理",
+              link: "/admin/systemEdit"
+            },
+            {
+              index: "4-2",
+              icon: "el-icon-reading",
+              name: "操作日志",
+              link: "/admin/systemLog"
+            },
+            {
+              index: "4-3",
+              icon: "el-icon-chat-line-round",
+              name: "用户留言",
+              link: "/admin/systemComment"
+            },
+          ]
+        },
       ]
     };
   },
@@ -82,14 +120,6 @@ export default {
     }
   },
   computed: {
-    currentIndex() {
-      for (let i = 0; i < this.menus.length; i++) {
-        if (this.menus[i].link == this.$router.currentRoute.name) {
-          console.log(this.$router.currentRoute.name);
-          return this.menus[i].index;
-        }
-      }
-    },
     menuWidth() {
       return this.menuShow ? "65px" : "160px";
     }
@@ -107,4 +137,6 @@ export default {
 .el-aside {
   color: #333;
 }
+
+
 </style>

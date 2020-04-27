@@ -65,6 +65,7 @@
       <div class="block">
         <span class="demonstration">大于 7 页时的效果</span>
         <el-pagination
+          background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
@@ -80,8 +81,8 @@
 </template>
 
 <script>
-  import editStudent from '../../components/EditStudent';
-  import editStudent1 from '../../components/EditStudent';
+  import editStudent from '../../components/EditStudentForm';
+  import editStudent1 from '../../components/EditStudentForm';
 
 export default {
   props: {
@@ -115,6 +116,7 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize=val;
+      this.selectStudent();
     },
     handleCurrentChange(val) {
       this.currentPage = val;

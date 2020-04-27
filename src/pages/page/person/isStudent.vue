@@ -1,16 +1,12 @@
 <template>
     <div>
-      asd
+      <h3>学生页面</h3>
     </div>
 </template>
 
 <script>
     export default {
-        name: "user",
-      data(){
-          return{
-          }
-      }
+        name: "isStudent"
     }
 </script>
 

@@ -44,7 +44,40 @@ export default new Router({
         {
           path: "/personCenter",
           name: "PersonCenter",
-          component: PersonCenter
+          component: PersonCenter,
+          redirect: "/personCenter/info",
+          children: [
+            {
+              path: "/personCenter/info",
+              name: "personInfo",
+              component: ()=>import("../pages/page/person/personInfo"),
+            },
+            {
+              path: "/personCenter/tutor",
+              name: "isTutor",
+              component: ()=>import("../pages/page/person/isTutor"),
+            },
+            {
+              path: "/personCenter/student",
+              name: "isStudent",
+              component: ()=>import("../pages/page/person/isStudent"),
+            },
+            {
+              path: "/personCenter/comment",
+              name: "comment",
+              component: ()=>import("../pages/page/person/comment"),
+            },
+            {
+              path: "/personCenter/order",
+              name: "order",
+              component: ()=>import("../pages/page/person/order"),
+            },
+            {
+              path: "/personCenter/message",
+              name: "message",
+              component: ()=>import("../pages/page/person/message"),
+            },
+          ]
         }
       ]
     },
@@ -84,12 +117,28 @@ export default new Router({
         {
           path: "/admin/system",
           name: "system",
-          component: () => import("../pages/cms/system")
+          component: () => import("../pages/cms/system"),
+          redirect: "/admin/systemEdit"
+        },
+        {
+          path: "/admin/systemEdit",
+          name: "systemEdit",
+          component: () => import("../pages/cms/system0/systemEdit")
+        },
+        {
+          path: "/admin/systemLog",
+          name: "systemLog",
+          component: () => import("../pages/cms/system0/systemLog")
+        },
+        {
+          path: "/admin/systemComment",
+          name: "systemComment",
+          component: () => import("../pages/cms/system0/systemComment")
         },
         {
           path: "/admin/user",
           name: "user",
-          component: () => import("../pages/cms/system")
+          component: () => import("../pages/cms/user"),
         }
       ]
     }

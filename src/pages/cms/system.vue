@@ -1,15 +1,12 @@
 <template>
-  <div>System</div>
+  <div>
+dasd
+  </div>
 </template>
 
 <script>
 export default {
-  props: {},
-  data() {
-    return {};
-  },
-  methods: {},
-  components: {}
+
 };
 </script>
 
