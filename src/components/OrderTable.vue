@@ -3,7 +3,8 @@
       <el-row>
         <el-table
           ref="multipleTable"
-          :data="orderData"
+          :data="orderData.filter(data => !search || data.studentName.toLowerCase().includes(search.toLowerCase())||
+                                  data.tutorName.toLowerCase().includes(search.toLowerCase()))"
           tooltip-effect="dark"
           style="width: 100%"
           :max-height="400"
@@ -35,6 +36,20 @@
             prop="cost"
             label="价格">
           </el-table-column>
+          <el-table-column
+            align="right">
+            <template slot="header" slot-scope="scope">
+              <el-input
+                v-model="search"
+                size="mini"
+                placeholder="输入关键字搜索"/>
+            </template>
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)">不知道啥操作</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-row>
       <el-row>
@@ -57,6 +72,7 @@
         name: "OrderTable",
       data(){
           return{
+            search: '',
             multipleSelection:[],
             orderData: [
               {
@@ -126,7 +142,10 @@
               done();
             })
             .catch(_ => {});
-        }
+        },
+        handleEdit(index, row) {
+          this.$message.info("按钮：你点击了我！真厉害！")
+        },
       }
     }
 </script>

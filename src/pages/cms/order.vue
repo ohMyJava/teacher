@@ -1,15 +1,20 @@
 <template>
-  <div>Order</div>
+  <div>
+    <order></order>
+  </div>
 </template>
 
 <script>
+  import order from '../../components/OrderTable'
 export default {
   props: {},
   data() {
     return {};
   },
   methods: {},
-  components: {}
+  components: {
+    order
+  }
 };
 </script>
 

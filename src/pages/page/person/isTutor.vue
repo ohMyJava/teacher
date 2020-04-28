@@ -50,8 +50,8 @@
           </el-collapse>
         </el-tab-pane>
 
-        <el-tab-pane label="去请家教">
-          <edit ref="addTutor"></edit>
+        <el-tab-pane label="成为家教">
+          <edit ref="addTutor" :isShow="flag"></edit>
           <span style="text-align: center"><el-button round type="primary" @click="submit">提交</el-button></span>
         </el-tab-pane>
       </el-tabs>
@@ -64,13 +64,14 @@
         name: "isTutor",
       data(){
           return{
+            flag:false,
             activeNames: 0,
             myStudents:[],
           }
       },
       methods:{
           submit(){
-            alert("提交了")
+            this.$refs['addTutor'].check(1);
           },
         handleChange(val) {
           console.log(val);
@@ -87,6 +88,20 @@
 </script>
 
 <style scoped>
+  .el-row{
+    padding: 5px 0;
+    border: 1px solid dimgrey;
+  }
+  .title{
+    font: 16px Medium;
+  }
+  .content{
+    font: 14px Base;
+    text-align: left;
+  }
+  .box-card {
+    width: 100%;
+  }
   .el-row{
     padding: 5px 0;
     border: 1px solid dimgrey;

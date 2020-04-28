@@ -1,5 +1,6 @@
 <template>
-    <div style="margin-left: 15%;width: 60%;">
+  <div>
+    <div style="margin-left: 15%;width: 60%;margin-top: 7%">
       <el-form ref="form" :model="form" label-width="120px" :rules="rules" >
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户名" ></el-input>
@@ -34,10 +35,12 @@
         </el-form-item>
       </el-form>
     </div>
+  </div>
 </template>
 
 <script>
-  import * as validate from '../../assets/js/validate'
+  import * as validate from '../../assets/js/validate';
+
     export default {
         name: "reg",
       data(){
@@ -62,7 +65,7 @@
               ],
               name:[
                 {required: true, message: '请输入姓名', trigger: 'blur'},
-                {validator: validate.isTrueName(), trigger: 'blur'}
+                {validator: validate.isTrueName, trigger: 'blur'}
               ],
               sex:[
                 {required:true,message:'请选择性别',trigger:'change'}
@@ -92,6 +95,9 @@
           });
         },
       },
+      beforeCreate(){
+          console.log(1)
+      }
     }
 </script>
 

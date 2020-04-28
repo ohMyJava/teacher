@@ -158,7 +158,7 @@
 
   .container{
     margin-top: -70px;
-    padding: 80px 0 280px;
+    padding: 40px 0 280px;
     box-sizing: border-box;
     min-height: 100%;
   }

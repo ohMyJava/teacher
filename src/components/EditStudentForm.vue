@@ -2,12 +2,17 @@
     <div>
         <el-form :model="addList" :rules="rules" ref="form">
           <el-form-item label="学生姓名" prop="studentName">
-            <el-input v-model="addList.studentName" placeholder="请输入学生姓名"></el-input>
+            <el-input v-model="addList.studentName" placeholder="请输入学生姓名" style="width: 70%"></el-input>
           </el-form-item>
           <el-form-item label="学生年龄" prop="studentAge">
-            <el-input v-model="addList.studentAge" placeholder="请输入学生年龄"></el-input>
+            <el-select v-model="addList.age" placeholder="请选择年龄">
+              <el-option
+                v-for="item in 30"
+                :key="item"
+                :value="item"></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="用户账号" prop="userName">
+          <el-form-item label="用户账号" prop="userName" v-if="isShow">
             <el-select
               v-model="addList.userName"
               filterable
@@ -43,7 +48,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="手机号" prop="phoneNumber">
-            <el-input v-model="addList.phoneNumber" placeholder="请输入学生手机号"></el-input>
+            <el-input v-model="addList.phoneNumber" placeholder="请输入学生手机号" style="width: 70%"></el-input>
           </el-form-item>
           <el-form-item label="家教能力" prop="tags">
             <el-tag
@@ -67,7 +72,13 @@
             <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新科目</el-button>
           </el-form-item>
           <el-form-item label="家教地点" prop="expectTutorLocation">
-            <el-input type="textarea" placeholder="山东省青岛市李沧区**小区" v-model="addList.expectTutorLocation"></el-input>
+            <el-cascader
+              style="width: 100%"
+              clearable
+              placeholder="试试搜索：青岛市"
+              :options="address"
+              v-model="location"
+              filterable></el-cascader>
           </el-form-item>
           <el-form-item label="学生兴趣爱好" prop="studentHobby">
             <el-input type="textarea" v-model="addList.studentHobby" placeholder="可不填"></el-input>
@@ -80,8 +91,13 @@
   import * as validate from '../assets/js/validate';
     export default {
       name: "EditStudent",
+      props:{
+        isShow:'',
+      },
       data() {
         return {
+          address:'',
+          location:'',
           message:'',
           options: [],
           list: [],
@@ -152,11 +168,7 @@
           },
         }
       },
-      beforeCreate(){
-        console.log("beforeCreate");
-      },
       async created() {
-        console.log("created");
         /*可以不在这里执行*/
         let response=await this.$axios.get('/api/user/getUsernameList');
         if (response.data.code === '6666') {
@@ -168,8 +180,17 @@
           return {value: `${item}`, label: `${item}`};
         });
       },
+      async mounted(){
+        let res = await this.$axios.get('../../static/json/address.json');
+        this.address=res.data;
+      },
       methods: {
-        check() {
+        check(flag) {
+          if (flag === 1) {
+            this.addList.userName=this.$store.state.currentUser;
+          }
+          this.addList.expectTutorLocation=this.location.join("");
+          console.log(this.addList)
           this.$refs['form'].validate(async valid => {
             if (valid) {
               this.addList.expectTutorAble = this.addList.tags.join(",");

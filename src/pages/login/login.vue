@@ -17,8 +17,8 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" round="true" @click="login('form')">登录</el-button>
-            <el-button type="primary" round="true" @click="reg">注册</el-button>
+            <el-button type="primary" round @click="login('form')">登录</el-button>
+            <el-button type="primary" round @click="reg">注册</el-button>
           </el-form-item>
         </el-form>
       </el-col>

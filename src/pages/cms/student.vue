@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--按钮区域-->
     <el-row >
       <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2">
         <el-button type="primary" icon="el-icon-document-add" @click="dialogVisible = true">添加</el-button>
@@ -10,7 +9,7 @@
           width="60%"
           :destroy-on-close="true"
           :before-close="handleClose">
-          <edit v-if="dialogVisible" ref="addList" @getMessage="getFlag"></edit>
+          <edit v-if="dialogVisible" ref="addList" @getMessage="getFlag" :isShow="flag"></edit>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="addStudent()">确 定</el-button>
@@ -26,7 +25,7 @@
           @open="dosome()"
           :destroy-on-close="true"
           :before-close="handleClose">
-          <edit1 v-if="dialogVisible1" ref="editList" @getMessage="getFlag1"></edit1>
+          <edit1 v-if="dialogVisible1" ref="editList" @getMessage="getFlag1" :isShow="flag"></edit1>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible1 = false">取 消</el-button>
             <el-button type="primary" @click="editStudent('form')">确 定</el-button>
@@ -63,7 +62,6 @@
         <el-table-column prop="location" label="家教地点" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
       <div class="block">
-        <span class="demonstration">大于 7 页时的效果</span>
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -86,14 +84,10 @@
 
 export default {
   props: {
-    addList:{
-    },
-    editList:{
-
-    },
   },
   data() {
     return {
+      flag:true,
       dialogVisible:false,
       dialogVisible1:false,
       condition:'',
