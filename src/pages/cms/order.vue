@@ -9,9 +9,11 @@
 export default {
   props: {},
   data() {
-    return {};
+    return {
+    };
   },
-  methods: {},
+  methods: {
+  },
   components: {
     order
   }

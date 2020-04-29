@@ -1,16 +1,23 @@
 <template>
     <div style="margin-top: -30px">
       <!-- 分类搜索筛选 -->
-      <el-row>
-        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8"></el-col>
-        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8"></el-col>
-        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8"></el-col>
+      <el-row style="margin: 10px 0">
+        <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
+          辅导科目：<el-input v-model="able" placeholder="请输入筛选条件"></el-input>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
+          年级：<el-input v-model="grade" placeholder="请输入筛选条件"></el-input>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
+          地区：<el-input v-model="location" placeholder="请输入筛选条件"></el-input>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
+          <el-button round type="primary" @click="select">筛选</el-button>
+          <el-button round type="primary" @click="reset">重置</el-button>
+        </el-col>
       </el-row>
       <el-table
-        :data="studentList.filter(data => !search
-                             || data.able.toLowerCase().includes(search.toLowerCase())
-                             || data.grade.toLowerCase().includes(search.toLowerCase())
-                             || data.location.toLowerCase().includes(search.toLowerCase()))"
+        :data="studentList"
         style="width: 100%"
         :current-page="currentPage"
         :max-height="450">
@@ -36,12 +43,6 @@
         </el-table-column>
         <el-table-column
           align="center">
-          <template slot="header" slot-scope="scope">
-            <el-input
-              v-model="search"
-              size="mini"
-              placeholder="输入关键字搜索"/>
-          </template>
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -78,6 +79,9 @@
           currentPage:1,
           limit:10,
           total:0,
+          able:'',
+          grade:'',
+          location:'',
         }
       },
       methods: {
@@ -96,6 +100,20 @@
         handleCurrentChange(val) {
           this.currentPage = val;
         },
+        async select(){
+          let res=await this.$axios.post(
+            '/api/tutor/tutorFilter',
+            {able:this.able,school:this.grade,location:this.location,limit:this.limit,page:this.currentPage},
+            {headers:{"content-type":"application/json"}});
+          this.studentList=res.data.data;
+          this.total=this.data.data.length;
+        },
+        reset(){
+          this.able='';
+          this.school='';
+          this.location='';
+          this.select();
+        }
       },
       async mounted(){
         let res = await this.$axios.get('../../static/json/studentList.json');
@@ -106,5 +124,7 @@
 </script>
 
 <style scoped>
-
+  .el-input{
+    width: 66%;
+  }
 </style>

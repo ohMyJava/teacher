@@ -1,10 +1,17 @@
 <template>
     <div>
       <el-row>
+        <el-col :xs="16" :sm="16" :md="10" :lg="10" :xl="10">
+          <el-input v-model="condition" placeholder="请输入学生或家教姓名"></el-input>
+        </el-col>
+        <el-col :xs="8" :sm="8" :md="3" :lg="3" :xl="3" >
+          <el-button type="primary" round icon="el-icon-search" @click="select">查询</el-button>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-table
           ref="multipleTable"
-          :data="orderData.filter(data => !search || data.studentName.toLowerCase().includes(search.toLowerCase())||
-                                  data.tutorName.toLowerCase().includes(search.toLowerCase()))"
+          :data="orderData"
           tooltip-effect="dark"
           style="width: 100%"
           :max-height="400"
@@ -38,12 +45,6 @@
           </el-table-column>
           <el-table-column
             align="right">
-            <template slot="header" slot-scope="scope">
-              <el-input
-                v-model="search"
-                size="mini"
-                placeholder="输入关键字搜索"/>
-            </template>
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -72,7 +73,7 @@
         name: "OrderTable",
       data(){
           return{
-            search: '',
+            condition:'',
             multipleSelection:[],
             orderData: [
               {
@@ -130,11 +131,13 @@
         },
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
-          this.getAdminList();
+          this.limit = val;
+          this.select();
         },
         handleCurrentChange(val) {
           console.log(`当前页: ${val}`);
-          this.getAdminList();
+          this.currentPage = val;
+          this.select();
         },
         handleClose(done) {
           this.$confirm('确认关闭？')
@@ -146,6 +149,11 @@
         handleEdit(index, row) {
           this.$message.info("按钮：你点击了我！真厉害！")
         },
+        async select(){
+          let res=await this.$axios.post('/api/order/getOrders',{limit:this.limit,page:this.currentPage,condition:this.condition},{headers:{"content-type":"application/json"}})
+          this.orderData=res.data.data;
+          this.total=res.data.data.length;
+        }
       }
     }
 </script>
