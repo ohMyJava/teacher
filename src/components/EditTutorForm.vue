@@ -1,21 +1,21 @@
 <template>
     <div>
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入姓名" style="width: 70%"></el-input>
+        <el-form-item label="姓名" prop="tutorName">
+          <el-input v-model="form.tutorName" placeholder="请输入姓名" style="width: 70%"></el-input>
         </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-select v-model="form.age" placeholder="请选择年龄">
+        <el-form-item label="年龄" prop="tutorAge">
+          <el-select v-model="form.tutorAge" placeholder="请选择年龄">
             <el-option
               v-for="item in 30"
               :key="item"
               :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-radio-group v-model="form.sex">
-            <el-radio label="1" >男</el-radio>
-            <el-radio label="0" >女</el-radio>
+        <el-form-item label="性别" prop="tutorSex">
+          <el-radio-group v-model="form.tutorSex">
+            <el-radio label="男" >男</el-radio>
+            <el-radio label="女" >女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="用户账号" prop="userName" v-if="isShow">
@@ -35,13 +35,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学历" prop="education">
-          <el-select v-model="form.education" placeholder="请选择学历">
+        <el-form-item label="学历" prop="tutorEducation">
+          <el-select v-model="form.tutorEducation" placeholder="请选择学历">
             <el-option v-for="(item,index) in gradeList" :key="index" :label="item.title" :value="item.title" ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学校" prop="school">
-          <el-input v-model="form.school" placeholder="请输入学校名称（全称）" style="width: 70%"></el-input>
+        <el-form-item label="学校" prop="tutorSchool">
+          <el-input v-model="form.tutorSchool" placeholder="请输入学校名称（全称）" style="width: 70%"></el-input>
         </el-form-item>
         <el-form-item label="擅长科目" prop="tags">
           <el-tag
@@ -67,7 +67,7 @@
         <el-form-item label="手机号" prop="phoneNumber">
           <el-input v-model="form.phoneNumber" placeholder="请输入手机号" style="width: 70%"></el-input>
         </el-form-item>
-        <el-form-item label="当前所在地" prop="location">
+        <el-form-item label="当前所在地" prop="tutorLocation">
           <el-cascader
             style="width: 100%"
             clearable
@@ -77,7 +77,7 @@
             filterable></el-cascader>
         </el-form-item>
         <el-form-item label="兴趣爱好" prop="hobby">
-          <el-input type="textarea" v-model="form.studentHobby" placeholder="可不填"></el-input>
+          <el-input type="textarea" v-model="form.tutorHobby" placeholder="可不填"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -103,16 +103,16 @@
           inputVisible: false,
           inputValue: '',
           form: {
-            name: '',
-            age:'',
-            sex: '',
-            education: '',
-            school:'',
-            goodSubjects: '',
-            phoneNumber: '',
+            tutorName: '',
+            tutorAge:'',
+            tutorSex: '',
+            tutorEducation: '',
+            tutorSchool:'',
+            tutorGoodSubjects: '',
+            tutorPhoneNumber: '',
             tags: [],
-            location: '',
-            hobby:'',
+            tutorLocation: '',
+            tutorHobby:'',
             userName: '',
           },
           gradeList: [
@@ -125,30 +125,30 @@
 
           ],
           rules: {
-            name: [
+            tutorName: [
               {required: true, message: '请输入姓名', trigger: 'blur'}
             ],
-            sex: [
+            tutorSex: [
               {required: true, message: '请选择性别', trigger: 'change'}
             ],
-            age: [
+            tutorAge: [
               {required: true, message: '请输入年龄', trigger: 'change'},
             ],
             phoneNumber: [
               {required: true, message: '请输入手机号', trigger: 'blur'},
               {validator: validate.isPhoneNumber, trigger: 'blur'}
             ],
-            education: [
+            tutorEducation: [
               {required: true, message: '请选择年级', trigger: 'change'}
             ],
-            school: [
+            tutorSchool: [
               {required: true, message: '请输入学校名称', trigger: 'change'}
             ],
             userName: [
               {required: true, message: '请输入家教关联的用户名', trigger: 'change'},
               {validator: validate.isTrueUserName, trigger: 'blur'}
             ],
-            location: [
+            tutorLocation: [
               {required: true, message: '请输入家教地点', trigger: 'blur'}
             ],
             tags: [
@@ -163,14 +163,14 @@
           if (flag === 1) {
             this.form.userName = this.$store.state.currentUser;
           }
-          this.form.location=this.location.join("");
-          console.log(this.form)
+          this.form.tutorLocation=this.location.join("-");
+          console.log(this.form);
           this.$refs['form'].validate(async valid => {
             if (valid) {
-              this.form.goodSubjects = this.form.tags.join(",");
+              this.form.tutorGoodSubjects = this.form.tags.join(",");
               let res = await this.$axios.post('/api/tutor/addTutor', JSON.stringify(this.form), {headers: {'content-type': 'application/json'}});
               if (res.data.code === '6666') {
-                this.$message.success("添加的家教为：" + this.form.name);
+                this.$message.success("添加的家教为：" + this.form.tutorName);
                 this.form = [];
                 this.$emit('getMessage', true);
               } else {
@@ -185,8 +185,11 @@
         /*不了解getVal方法中注释中与非注释中的语句对tag标签删除操作的影响的原因*/
         async getVal(id) {
           let res = await this.$axios.get('/api/tutor/getOneTutor?tutorId=' + id);
+          console.log(res)
           const list = res.data.data;
-          list.tags = res.data.data.goodSubjects.split(",");
+          list.tags = res.data.data.tutorGoodSubjects.split(",");
+          this.location=res.data.data.tutorLocation.split("-");
+          console.log(this.location)
           this.form = list;
         },
         tagClose(tag) {
@@ -214,8 +217,8 @@
             if (valid) {
               this.form.tutorId = id;
               console.log(this.form.tags);
-              this.form.goodSubjects = this.form.tags.join(",");
-              console.log(this.form.goodSubjects);
+              this.form.tutorGoodSubjects = this.form.tags.join(",");
+              console.log(this.form.tutorGoodSubjects);
               let res = await this.$axios.post('/api/tutor/modifyTutor', JSON.stringify(this.form), {headers: {'content-type': 'application/json'}});
               if (res.data.code === '6666') {
                 this.$message.success(res.data.message);

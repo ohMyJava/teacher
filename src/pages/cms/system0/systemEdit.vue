@@ -111,7 +111,7 @@
       },
       methods: {
         async getAdminList(){
-          let res =await this.$axios.get('../../../static/json/adminList.json');
+          let res =await this.$axios.get('/api/admin/getAdmins?power=0');
           console.log(res);
           this.$data.adminData=res.data.data;
           this.$data.total=res.data.data.length;

@@ -5,7 +5,7 @@
             <el-input v-model="addList.studentName" placeholder="请输入学生姓名" style="width: 70%"></el-input>
           </el-form-item>
           <el-form-item label="学生年龄" prop="studentAge">
-            <el-select v-model="addList.age" placeholder="请选择年龄">
+            <el-select v-model="addList.studentAge" placeholder="请选择年龄">
               <el-option
                 v-for="item in 30"
                 :key="item"
@@ -31,8 +31,8 @@
           </el-form-item>
           <el-form-item label="学生性别" prop="studentSex">
             <el-radio-group v-model="addList.studentSex">
-              <el-radio label="1" >男</el-radio>
-              <el-radio label="0" >女</el-radio>
+              <el-radio label="男">男</el-radio>
+              <el-radio label="女">女</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="学生年级" prop="studentGrade">
@@ -189,7 +189,7 @@
           if (flag === 1) {
             this.addList.userName=this.$store.state.currentUser;
           }
-          this.addList.expectTutorLocation=this.location.join("");
+          this.addList.expectTutorLocation=this.location.join("-");
           console.log(this.addList)
           this.$refs['form'].validate(async valid => {
             if (valid) {
@@ -213,6 +213,7 @@
           let res = await this.$axios.get('/api/student/getOneStudent?studentId=' + id);
           const list=res.data.data;
           list.tags=res.data.data.expectTutorAble.split(",");
+          this.location=res.data.data.expectTutorLocation.split("-");
           this.addList=list;
          /* this.addList = res.data.data;
           this.addList.tags=this.addList.expectTutorAble.split(",");*/

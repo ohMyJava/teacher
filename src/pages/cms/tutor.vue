@@ -55,12 +55,12 @@
                 :cell-style="{padding:'5px 0'}"
                 :max-height="350">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="ID" v-if="this.show=false" > </el-table-column>
-        <el-table-column prop="name" label="姓名"> </el-table-column>
+        <el-table-column prop="tutorId" label="ID" v-if="this.show=false" > </el-table-column>
+        <el-table-column prop="tutorName" label="姓名"> </el-table-column>
         <el-table-column prop="phoneNumber" label="联系方式"> </el-table-column>
-        <el-table-column prop="education" label="学历"> </el-table-column>
+        <el-table-column prop="tutorEducation" label="学历"> </el-table-column>
         <!--:show-overflow-tooltip="true" 解决了当此列内容过长自动换行的问题，它会以hover的方式显示全部信息-->
-        <el-table-column prop="location" label="所在地区" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="tutorLocation" label="所在地区" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
       <div class="block">
         <el-pagination
@@ -106,14 +106,15 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize=val;
-      this.selectStudent();
+      this.selectTutors();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.selectStudent();
+      this.selectTutors();
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(this.multipleSelection)
     },
     getFlag(msg){
       this.dialogVisible=msg;
@@ -136,12 +137,12 @@ export default {
     },
     dosome(){
       setTimeout(()=>{
-        let id=this.multipleSelection[0].id;
+        let id=this.multipleSelection[0].tutorId;
         this.$refs['editTutor'].getVal(id);
       })
     },
     editStudent(){
-      this.$refs['editTutor'].modifyStudent(this.multipleSelection[0].id);
+      this.$refs['editTutor'].modifyStudent(this.multipleSelection[0].tutorId);
       this.selectTutors();
     },
     delTutor(){
