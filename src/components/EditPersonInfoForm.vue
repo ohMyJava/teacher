@@ -50,20 +50,33 @@
             this.disable=!this.disable;
           },
         updateInfo(){
-          this.$refs['form'].validate((valid)=>{
+          this.$refs['form'].validate(async (valid)=>{
             if (valid) {
-              this.setDisable();
-              this.$message.success("更新成功！");
-              this.$emit('getMessage',true);
+              //    从vuex中取得userId
+              this.form.userId=userId;
+              let res = await this.$axios.post(
+                "/api/person/updateMyInfo",
+                this.form,
+                {headers:{"content-type":"application/json"}});
+              if (res.data.code === '6666') {
+                this.$message.success("更新成功！");
+                this.setDisable();
+                this.$emit('getMessage',true);
+              }else {
+                this.$message.warning("更新失败！请重试或联系管理员！");
+              }
             }else{
-              this.$message.warning("更新失败！");
+              this.$message.warning("请正确填写信息！");
             }
           })
         },
       },
       async mounted(){
-          let res = await this.$axios.get('../../static/json/userInfo.json');
-          this.form=res.data;
+        //  从vuex中获取当前用户id
+        let res = await this.$axios.get('/api/person/getMyInfo?userId='+userId);
+        this.form=res.data;
+          /*let res = await this.$axios.get('../../static/json/userInfo.json');
+          this.form=res.data;*/
       }
     }
 </script>

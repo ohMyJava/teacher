@@ -11,7 +11,7 @@
 
               <el-card class="box-card" shadow="always">
                 <div slot="header" class="clearfix">
-                  <span style="font-weight: bold">{{value.name}}</span>
+                  <span style="font-weight: bold">学生姓名：{{value.name}}||家教姓名{{value.tutorName}}</span>
                 </div>
                 <el-row>
                   <el-col class="title" :xs="6" :sm="6" :md="6" :lg="6" :xl="6">学生年龄：</el-col>
@@ -35,7 +35,7 @@
                 </el-row>
                 <el-row>
                   <el-col class="title" :xs="6" :sm="6" :md="6" :lg="6" :xl="6">辅导科目：</el-col>
-                  <el-col class="content" :xs="18" :sm="18" :md="18" :lg="18" :xl="18">{{value.able}}</el-col>
+                  <el-col class="content" :xs="18" :sm="18" :md="18" :lg="18" :xl="18">{{value.course}}</el-col>
                 </el-row>
                 <el-row>
                   <el-col class="title" :xs="6" :sm="6" :md="6" :lg="6" :xl="6">家教地点：</el-col>
@@ -81,8 +81,11 @@
           edit
       },
       async mounted(){
-          let res = await this.$axios.get('../../static/json/myStudent.json');
-          this.myStudents=res.data;
+        //  从vuex中获取当前用户id
+        let res = await this.$axios.get('/api/person/getMyStudents?userId='+userId);
+        this.myStudents=res.data;
+          /*let res = await this.$axios.get('../../static/json/myStudent.json');
+          this.myStudents=res.data;*/
       }
     }
 </script>

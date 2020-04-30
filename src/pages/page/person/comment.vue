@@ -9,7 +9,7 @@
               v-for="(v,i) in typeList"
               :key="i"
               :label="v.title"
-              :value="v.title">
+              :value="v.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -31,9 +31,9 @@
               content:'',
             },
             typeList:[
-              {title:'错误提交'},
-              {title:'意见反馈'},
-              {title:'其他'},
+              {title:'错误提交',id:1},
+              {title:'意见反馈',id:2},
+              {title:'其他',id:3},
             ],
             rule:{
               type:[{required:true,message:'请选择留言类型',trigger:'blur'}],
@@ -43,9 +43,19 @@
       },
       methods:{
         submit(){
-          this.$refs['form'].validate((valid)=>{
+          console.log(this.type);
+          this.$refs['form'].validate(async(valid)=>{
             if (valid) {
-              this.$message.success("提交成功！");
+              let res = await this.$axios.post(
+                "/api/person/pushComment",
+                {type:this.type,comment:this.comment},
+                {headers:{"content-type":"application/json"}});
+              if (res.data.code === "6666") {
+                this.$message.success("提交成功！");
+                this.content='';
+              }else {
+                this.$message.warning("提交失败！请重试或联系管理员！");
+              }
             }else {
               this.$message.warning("请正确填写！");
             }
