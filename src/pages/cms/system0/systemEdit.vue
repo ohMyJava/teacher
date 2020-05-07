@@ -112,10 +112,8 @@
       methods: {
         async getAdminList(){
           let res =await this.$axios.get('/api/admin/getAdmins?power=0');
-          console.log(res);
           this.$data.adminData=res.data.data;
           this.$data.total=res.data.data.length;
-          console.log("查询了管理员列表")
           /*分页模糊请求后端*/
         },
         addAdmin(){

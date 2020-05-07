@@ -216,6 +216,7 @@
           this.$refs['form'].validate(async valid => {
             if (valid) {
               this.form.tutorId = id;
+              this.form.tutorLocation=this.location.join("-");
               console.log(this.form.tags);
               this.form.tutorGoodSubjects = this.form.tags.join(",");
               console.log(this.form.tutorGoodSubjects);

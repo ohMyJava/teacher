@@ -3,13 +3,13 @@
       <h3>编辑管理员信息表单</h3>
       <el-form ref="form" :model="adminData" :rules="rules">
         <el-form-item label="管理员账号：" prop="adminName">
-          <el-input v-model="adminName" placeholder="请输入管理员账号" ></el-input>
+          <el-input v-model="adminData.adminName" placeholder="请输入管理员账号" ></el-input>
         </el-form-item>
         <el-form-item label="管理员密码" prop="adminPassword">
-          <el-input v-model="adminPassword" placeholder="请输入管理员密码" show-password></el-input>
+          <el-input v-model="adminData.adminPassword" placeholder="请输入管理员密码" show-password></el-input>
         </el-form-item>
         <el-form-item label="管理员权限" prop="power">
-          <el-select v-model="power">
+          <el-select v-model="adminData.power">
             <el-option
               v-for="value in powerList"
               :key="value.id"
@@ -18,7 +18,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="附加信息">
-          <el-input type="textarea" v-model="adminInformation" placeholder="可不填"></el-input>
+          <el-input type="textarea" v-model="adminData.adminInformation" placeholder="可不填"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -29,7 +29,7 @@
       name: "EditUserForm",
       data() {
         return {
-          adminData: [],
+          adminData: {},
           powerList: [
             {
               id: 0,

@@ -117,10 +117,10 @@ export default {
       console.log(this.multipleSelection)
     },
     getFlag(msg){
-      this.dialogVisible=msg;
+      this.dialogVisible=!msg;
     },
     getFlag1(msg){
-      this.dialogVisible1=msg;
+      this.dialogVisible1=!msg;
     },
     addTutor(){
       this.$refs['addTutor'].check();
@@ -149,9 +149,12 @@ export default {
       var list=[];
       if (this.multipleSelection.length > 0) {
         for (let key in this.multipleSelection) {
-          list[key] = this.multipleSelection[key].id;
+          list[key] = this.multipleSelection[key].tutorId;
         }
         let delList=list.join(",");
+        // console.log(this.multipleSelection)
+        console.log(delList)
+        // console.log(list)
         this.$axios.post('/api/tutor/delTutor',delList,{headers:{'content-type':'application/json'}}).then(res=>{
           if (res.data.code === '6666') {
             this.$message.success("删除成功！");
@@ -176,7 +179,7 @@ export default {
       let res=await this.$axios.get('/api/tutor/getTutors?limit='
         +this.pageSize+'&page='
         +this.currentPage+'&condition='+this.condition.trim());
-      this.$data.tutorList=res.data.data;
+      this.tutorList=res.data.data;
     }
   },
   components: {

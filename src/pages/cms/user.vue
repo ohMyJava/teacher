@@ -6,14 +6,14 @@
         <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2">
         </el-col>
         <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2">
-          <el-button type="primary" icon="el-icon-delete" >删除</el-button>
+          <el-button type="primary" icon="el-icon-delete" @click="delUser()" >删除</el-button>
         </el-col>
-        <el-col :xs="12" :sm="10" :md="10" :lg="5" :xl="5">
+        <el-col :xs="12" :sm="10" :md="10" :lg="6" :xl="5">
           <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="18" style="padding-right: 5px">
             <el-input placeholder="请输入要查询用户账号或姓名" v-model="condition"></el-input>
           </el-col>
           <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
-            <el-button type="primary" icon="el-icon-search" @click="getUsers()">查询</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="select()">查询</el-button>
           </el-col>
         </el-col>
       </el-row>
@@ -54,14 +54,7 @@
       data(){
           return{
             condition:'',
-            userList:[
-              {
-                userId:'0001',
-                userName:'2020-04-24',
-                name:'张三',
-                phoneNumber:'家教',
-              },
-            ],
+            userList:[],
             currentPage:0,
             limit:10,
             total:0,
@@ -71,19 +64,46 @@
       methods:{
         handleSizeChange(val) {
           this.limit=val;
-          this.getUsers();
+          this.select();
         },
         handleCurrentChange(val) {
           this.currentPage = val;
-          this.getUsers();
+          this.select();
         },
         handleSelectionChange(val) {
           this.multipleSelection = val;
-          console.log(this.multipleSelection);
         },
-        getUsers(){
-          console.log("ok")
-        }
+        async select(){
+          let res = await this.$axios.post('/api/user/getUsers',
+            {condition:this.condition,limit:this.limit,page:this.currentPage},
+            {headers:{'content-type':'application/json'}});
+          this.userList=res.data.data;
+
+          let resp = await this.$axios.get('/api/user/getNumbers?condition='+this.condition);
+          this.total=resp.data.data;
+        },
+        async delUser(){
+          let list=[];
+          if (this.multipleSelection.length > 0) {
+            for (let key in this.multipleSelection) {
+              list[key] = this.multipleSelection[key].userId;
+            }
+            let delList=list.join(",");
+            this.$axios.post('/api/user/delUser',delList,{headers:{'content-type':'application/json'}}).then(res=>{
+              if (res.data.code === '6666') {
+                this.$message.success("删除成功！");
+                this.select();
+              }else {
+                this.$message.error("删除失败，请联系管理员！");
+              }
+            })
+          }else {
+            this.$message.error("请至少选择一位用户！");
+          }
+        },
+      },
+      mounted(){
+          this.select();
       }
     }
 </script>

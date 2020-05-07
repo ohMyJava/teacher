@@ -22,24 +22,29 @@
         :current-page="currentPage"
         :max-height="450">
         <el-table-column
+          label="ID"
+          prop="studentId"
+          v-if="this.show=false">
+        </el-table-column>
+        <el-table-column
           label="姓名"
-          prop="name">
+          prop="studentName">
         </el-table-column>
         <el-table-column
           label="性别"
-          prop="sex">
+          prop="studentSex">
         </el-table-column>
         <el-table-column
           label="辅导科目"
-          prop="able">
+          prop="expectTutorAble">
         </el-table-column>
         <el-table-column
           label="年级"
-          prop="grade">
+          prop="studentGrade">
         </el-table-column>
         <el-table-column
-          label="所在地"
-          prop="location">
+          label="期待家教地点"
+          prop="expectTutorLocation">
         </el-table-column>
         <el-table-column
           align="center">
@@ -54,6 +59,27 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog
+        :title='studentInfo.studentName'
+        :visible.sync="dialogVisible"
+        width="40%"
+        :before-close="handleClose">
+        <div class="student-info">
+          <p>学生姓名：{{studentInfo.studentName}}</p>
+          <p>学生年龄：{{studentInfo.studentAge}}</p>
+          <p>学生性别：{{studentInfo.studentSex}}</p>
+          <p>学生年级：{{studentInfo.studentGrade}}</p>
+          <p>文理科：{{studentInfo.studentSubject}}</p>
+          <p>联系方式：{{studentInfo.phoneNumber}}</p>
+          <p>辅导科目：{{studentInfo.expectTutorAble}}</p>
+          <p>家教地点：{{studentInfo.expectTutorLocation}}</p>
+          <p>学生爱好：{{studentInfo.studentHobby}}</p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+             <el-link type="primary" href="/login">登录查看详细信息</el-link>
+            <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+           </span>
+      </el-dialog>
       <div class="block">
         <el-pagination
           background
@@ -74,6 +100,8 @@
         name: "StuCenter",
       data() {
         return {
+          dialogVisible:false,
+          studentInfo:{},
           studentList: [],
           search: '',
           currentPage:1,
@@ -85,10 +113,17 @@
         }
       },
       methods: {
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+        },
         handleEdit(index, row) {
-          console.log(index)
-          console.log(row)
-          alert("你查看了我")
+          console.log(row);
+          this.selectOneStudent(row.studentId);
+          this.dialogVisible=true;
         },
         handleDelete(index, row) {
           confirm("确定要申请当Ta的家教吗")
@@ -102,23 +137,28 @@
         },
         async select(){
           let res=await this.$axios.post(
-            '/api/tutor/tutorFilter',
-            {able:this.able,school:this.grade,location:this.location,limit:this.limit,page:this.currentPage},
+            '/api/studentPage/getStudents',
+            {able:this.able,grade:this.grade,location:this.location,limit:this.limit,page:this.currentPage},
             {headers:{"content-type":"application/json"}});
           this.studentList=res.data.data;
-          this.total=this.data.data.length;
+
+          let resp=await this.$axios.get('/api/studentPage/getNumbers?able='+this.able+
+            '&school='+this.school+'&location='+this.location);
+          this.total=resp.data.data;
         },
         reset(){
           this.able='';
           this.school='';
           this.location='';
           this.select();
+        },
+        async selectOneStudent(id){
+          let res=await this.$axios.get('/api/studentPage/getOneStudent?studentId='+id);
+          this.studentInfo=res.data.data;
         }
       },
       async mounted(){
-        let res = await this.$axios.get('../../static/json/studentList.json');
-        this.total=res.data.length;
-        this.studentList=res.data;
+        this.select();
       }
     }
 </script>
@@ -126,5 +166,13 @@
 <style scoped>
   .el-input{
     width: 66%;
+  }
+  .student-info{
+    padding: 0 15px;
+    text-align: left;
+  }
+  .student-info p{
+    text-indent: 1em;
+    border: 1px solid gray;
   }
 </style>

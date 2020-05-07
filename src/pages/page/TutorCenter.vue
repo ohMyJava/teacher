@@ -22,28 +22,33 @@
      :current-page.sync="currentPage"
      :max-height="450">
      <el-table-column
+       label="ID"
+       prop="tutorId"
+       v-if="this.show=false">
+     </el-table-column>
+     <el-table-column
        label="姓名"
-       prop="name">
+       prop="tutorName">
      </el-table-column>
      <el-table-column
        label="性别"
-       prop="sex">
+       prop="tutorSex">
      </el-table-column>
      <el-table-column
        label="擅长科目"
-       prop="able">
+       prop="tutorGoodSubjects">
      </el-table-column>
      <el-table-column
        label="学校"
-       prop="school">
+       prop="tutorSchool">
      </el-table-column>
      <el-table-column
        label="学历"
-       prop="education">
+       prop="tutorEducation">
      </el-table-column>
      <el-table-column
        label="所在地"
-       prop="location">
+       prop="tutorLocation">
      </el-table-column>
      <el-table-column
        align="center">
@@ -58,6 +63,27 @@
        </template>
      </el-table-column>
    </el-table>
+   <el-dialog
+     :title='tutorInfo.tutorName'
+     :visible.sync="dialogVisible"
+     width="40%"
+     :before-close="handleClose">
+     <div class="tutor-info">
+       <p>家教姓名：{{tutorInfo.tutorName}}</p>
+       <p>家教年龄：{{tutorInfo.tutorAge}}</p>
+       <p>家教性别：{{tutorInfo.tutorSex}}</p>
+       <p>擅长科目：{{tutorInfo.tutorGoodSubjects}}</p>
+       <p>联系方式：{{tutorInfo.phoneNumber}}</p>
+       <p>学&nbsp;&nbsp;历：{{tutorInfo.tutorEducation}}</p>
+       <p>所在地区：{{tutorInfo.tutorLocation}}</p>
+       <p>学&nbsp;&nbsp;校：{{tutorInfo.tutorSchool}}</p>
+       <p>兴趣爱好：{{tutorInfo.tutorHobby}}</p>
+     </div>
+     <span slot="footer" class="dialog-footer">
+             <el-link type="primary" href="/login">登录查看详细信息</el-link>
+            <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+           </span>
+   </el-dialog>
    <div class="block">
      <el-pagination
        background
@@ -78,7 +104,9 @@
         name: "TutorCenter",
       data() {
         return {
+          dialogVisible:false,
           tutorList: [],
+          tutorInfo:{},
           search: '',
           currentPage:1,
           limit:10,
@@ -89,11 +117,22 @@
         }
       },
       methods: {
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+        },
         handleEdit(index, row) {
-          alert("你查看了我")
+          this.selectOneTutor(row.tutorId)
+          this.dialogVisible=true;
+          console.log(index);
+          console.log(row);
         },
         handleDelete(index, row) {
           confirm("确定要邀请他当您的家教吗")
+          console.log(index, row);
         //  确认邀请后，显示选择自己绑定的学生信息。以便系统将学生信息发送给家教
         },
         handleSizeChange(val) {
@@ -106,29 +145,41 @@
         },
         async select(){
           let res=await this.$axios.post(
-            '/api/tutor/tutorFilter',
-            {able:this.able,school:this.school,location:this.location,limit:this.limit,page:this.currentPage},
+            '/api/tutorPage/getTutors',
+            {limit:this.limit,page:this.currentPage,able:this.able,school:this.school,location:this.location},
             {headers:{"content-type":"application/json"}});
           this.tutorList=res.data.data;
-          this.total=this.data.data.length;
+          let resp=await this.$axios.get('api/tutorPage/getNumbers?able='+this.able+
+                                         '&school='+this.school+'&location='+this.location);
+          this.total=resp.data.data;
         },
         reset(){
           this.able='';
           this.school='';
           this.location='';
           this.select();
+        },
+        async selectOneTutor(id){
+          let res=await this.$axios.get('/api/tutorPage/getOneTutor?tutorId='+id);
+          this.tutorInfo=res.data.data;
         }
       },
       async mounted(){
-        let res = await this.$axios.get('../../static/json/tutorList.json');
-        this.total=res.data.length;
-        this.tutorList=res.data;
+        this.select();
       }
     }
 </script>
 
 <style scoped>
-.el-input{
-  width: 66%;
-}
+  .el-input{
+    width: 66%;
+  }
+  .tutor-info{
+    padding: 0 15px;
+    text-align: left;
+  }
+  .tutor-info p{
+    text-indent: 1em;
+    border: 1px solid gray;
+  }
 </style>
