@@ -1,8 +1,54 @@
 <template>
   <div>
-    <div>
+    <template>
+      <el-carousel :interval="5000" arrow="always" height="350px">
+        <el-carousel-item>
+          <div class="contentBox">
+            <div class="header-info">小学</div>
+            <div class="item"
+                 v-for="(value,index) in elementary"
+                 :key="index"
+                 :index="index"
+                 :value="value">
+              <div>【{{value.name}}】</div>
+              <div>{{value.demand}}</div>
+              <el-divider></el-divider>
+            </div>
+          </div>
+        </el-carousel-item>
+
+        <el-carousel-item>
+          <div class="contentBox">
+            <div class="header-info">初中</div>
+
+          </div>
+        </el-carousel-item>
+
+        <el-carousel-item>
+          <div class="contentBox">
+            <div class="header-info">高中</div>
+
+          </div>
+        </el-carousel-item>
+
+        <el-carousel-item>
+          <div class="contentBox">
+            <div class="header-info">大学</div>
+
+          </div>
+        </el-carousel-item>
+
+        <el-carousel-item>
+          <div class="contentBox">
+            <div class="header-info">其他</div>
+
+          </div>
+        </el-carousel-item>
+      </el-carousel>
+    </template>
+    <!--<div>
       <el-row>
-        <!-- 小学 -->
+        &lt;!&ndash; 小学 &ndash;&gt;
         <el-col :xs="20" :sm="20" :md="12" :lg="12" :xl="12">
           <div class="contentBox">
             <div class="header-info">小学</div>
@@ -18,7 +64,7 @@
           </div>
         </el-col>
 
-        <!-- 初中 -->
+        &lt;!&ndash; 初中 &ndash;&gt;
         <el-col :xs="20" :sm="20" :md="12" :lg="12" :xl="12">
           <div class="contentBox">
             <div class="header-info">初中</div>
@@ -30,7 +76,7 @@
 
     <div>
       <el-row>
-        <!-- 高中 -->
+        &lt;!&ndash; 高中 &ndash;&gt;
         <el-col :xs="20" :sm="20" :md="12" :lg="12" :xl="12">
           <div class="contentBox">
             <div class="header-info">高中</div>
@@ -38,7 +84,7 @@
           </div>
         </el-col>
 
-        <!-- 其他 -->
+        &lt;!&ndash; 其他 &ndash;&gt;
         <el-col :xs="20" :sm="20" :md="12" :lg="12" :xl="12">
           <div class="contentBox">
             <div class="header-info">其他</div>
@@ -50,7 +96,7 @@
 
     <div>
       <el-row>
-        <!-- 大学 -->
+        &lt;!&ndash; 大学 &ndash;&gt;
         <el-col :xs="20" :sm="20" :md="24" :lg="24" :xl="24">
           <div class="contentBox1">
           <div class="header-info">大学</div>
@@ -58,7 +104,7 @@
           </div>
         </el-col>
       </el-row>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -119,5 +165,20 @@
   }
   .el-divider--horizontal{
     margin: 5px 0;
+  }
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 18px;
+    opacity: 0.75;
+    line-height: 300px;
+    margin: 0;
+  }
+ /*走马灯背景颜色*/
+  .el-carousel__item:nth-child(2n) {
+    background-color: #FFFFCC;
+  }
+
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #FFFFCC;
   }
 </style>

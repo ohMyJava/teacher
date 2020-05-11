@@ -73,10 +73,10 @@
       },
       async mounted(){
         //  从vuex中获取当前用户id
-        let res = await this.$axios.get('/api/person/getMyInfo?userId='+userId);
-        this.form=res.data;
-          /*let res = await this.$axios.get('../../static/json/userInfo.json');
-          this.form=res.data;*/
+        /*let res = await this.$axios.get('/api/person/getMyInfo?userId='+userId);
+        this.form=res.data;*/
+          let res = await this.$axios.get('../../static/json/userInfo.json');
+          this.form=res.data;
       }
     }
 </script>
