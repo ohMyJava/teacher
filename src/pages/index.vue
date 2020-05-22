@@ -104,6 +104,7 @@
       },
       computed:{
           isLogin(){
+            //退出登录后发送请求给后端，清除token相关信息
             if (sessionStorage.getItem("userName")&&sessionStorage.getItem("userToken")){
               this.$store.commit("userStatus",sessionStorage.getItem("userName"));
             } else {

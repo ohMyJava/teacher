@@ -10,8 +10,9 @@ const store =new Vuex.Store({
   //定义状态
   state:{
     currentUser:null,
+    type:'',
     isLogin:false,
-    token:'',
+    token:''
   },
   getters,
   mutations,

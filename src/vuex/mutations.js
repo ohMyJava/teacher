@@ -1,10 +1,12 @@
-export const userStatus = (state, user) => {
+export const userStatus = (state, userName,type,token) => {
   state.currentUser = null;
   state.isLogin = false;
   state.token = "";
-  if (user) {
-    state.currentUser = user;
+  if (userName) {
+    state.currentUser = userName;
     state.isLogin = true;
-    sessionStorage.setItem("username", user.username);
+    state.type = type;
+    state.token = token;
+    // sessionStorage.setItem("username", user.username);
   }
 };

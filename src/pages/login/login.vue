@@ -68,7 +68,6 @@ export default {
         let username = this.form.username;
         let password = this.form.password;
         let type = this.form.type;
-        console.log("getted:" + username + "   " + password + "    " + type);
         if (valid) {
           const ret = await this.$axios.post("/api/user/login", {
             username: username,
@@ -80,16 +79,17 @@ export default {
               message: "登录成功",
               showClose: true
             });
-            //将用户名和token放入sessionStorage
-            sessionStorage.setItem("userName", ret.data.username);
-            sessionStorage.setItem("userToken", ret.data.token);
             //将用户名放入vuex
-            this.$store.dispatch("setUser", ret.data.username);
-            this.$store.dispatch("setToken", ret.data.token);
+            let userName=ret.data.username;
+            let type=ret.data.type;
+            let token=ret.data.token;
+
+            this.$store.dispatch("setUser",userName,type,token);
             //打印login状态
             console.log(this.$store.state.isLogin);
+            console.log(this.$store.state)
             if (type === "1") {
-              this.$router.push("/");
+              this.$router.push("/article");
             } else if (type === "2") {
               this.$router.push("/admin");
             }

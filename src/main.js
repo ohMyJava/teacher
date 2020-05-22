@@ -19,6 +19,20 @@ Vue.use(ElementUI); // ElementUi就注册进去了
 Vue.prototype.$axios = axios;
 //axios.defaults.headers.post['Content-Type'] = 'application/json';
 //axios.defaults.baseURL = 'http://localhost:8888';  // 假设你的后端跑在8000端口
+
+
+// http request拦截器 添加一个请求拦截器
+axios.interceptors.request.use(function (config) {
+
+  let token = store.state.token;
+  let userName = store.state.userName;
+
+  config.headers.token = token;
+  config.headers.userName = userName;
+
+  return config;
+});
+
 axios.defaults.withCredentials = false;
 // 这样在vue文件里 就可以通过this.$axios来使用它了
 Vue.use(Vuex);
