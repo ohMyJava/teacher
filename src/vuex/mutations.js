@@ -1,7 +1,8 @@
-export const userStatus = (state, userName,type,token) => {
+export const userStatus = (state, {userName,type,token}) => {
   state.currentUser = null;
   state.isLogin = false;
   state.token = "";
+  state.type= "";
   if (userName) {
     state.currentUser = userName;
     state.isLogin = true;

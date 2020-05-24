@@ -25,7 +25,7 @@ Vue.prototype.$axios = axios;
 axios.interceptors.request.use(function (config) {
 
   let token = store.state.token;
-  let userName = store.state.userName;
+  let userName = store.state.currentUser;
 
   config.headers.token = token;
   config.headers.userName = userName;

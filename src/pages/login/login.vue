@@ -83,8 +83,10 @@ export default {
             let userName=ret.data.username;
             let type=ret.data.type;
             let token=ret.data.token;
+            console.log(type)
+            console.log(token)
 
-            this.$store.dispatch("setUser",userName,type,token);
+            this.$store.dispatch("setUser",{userName,type,token});
             //打印login状态
             console.log(this.$store.state.isLogin);
             console.log(this.$store.state)
