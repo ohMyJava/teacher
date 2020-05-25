@@ -11,7 +11,15 @@
   // 这就是组件的用法
   // 组件是通过在页面中引入使用
 export default {
-  name: 'App'
+  name: 'App',
+  created(){
+    if (localStorage) {
+      let token = localStorage.getItem("token");
+      let type = localStorage.getItem("type");
+      let username = localStorage.getItem("username");
+      this.$store.dispatch("setUser",{username,type,token});
+    }
+  }
 }
 </script>
 

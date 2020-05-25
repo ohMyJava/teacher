@@ -12,7 +12,8 @@ const store =new Vuex.Store({
     currentUser:null,
     type:'',
     isLogin:false,
-    token:''
+    token:'',
+    id:'',
   },
   getters,
   mutations,

@@ -79,14 +79,17 @@ export default {
               message: "登录成功",
               showClose: true
             });
-            //将用户名放入vuex
+
             let userName=ret.data.username;
             let type=ret.data.type;
             let token=ret.data.token;
+            let id = ret.data.id;
+            console.log(id)
             console.log(type)
             console.log(token)
 
             this.$store.dispatch("setUser",{userName,type,token});
+
             //打印login状态
             console.log(this.$store.state.isLogin);
             console.log(this.$store.state)

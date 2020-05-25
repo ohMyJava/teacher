@@ -88,7 +88,11 @@
           }
       },
       methods:{},
-
+      beforeEnter(){
+          if (!this.$store.getters.isLogin) {
+            this.$router.push("/login");
+          }
+      },
       components:{
 
       }

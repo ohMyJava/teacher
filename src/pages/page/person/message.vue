@@ -2,17 +2,17 @@
     <div>
       <el-row>
         <el-col :sm="4" :xs="4" :md="3" :lg="3" :xl="3">
-          <el-badge :value="3" class="item">
+          <el-badge :value="sysInfoNum" class="item">
             <el-button size="small">系统通知</el-button>
           </el-badge>
         </el-col>
         <el-col :sm="4" :xs="4" :md="3" :lg="3" :xl="3">
-          <el-badge :value="1" class="item" type="primary">
+          <el-badge :value="ansInfoNum" class="item" type="primary">
             <el-button size="small">新的答复</el-button>
           </el-badge>
         </el-col>
         <el-col :sm="4" :xs="4" :md="3" :lg="3" :xl="3">
-          <el-badge :value="2" class="item" type="warning">
+          <el-badge :value="commentNum" class="item" type="warning">
             <el-button size="small">留言反馈</el-button>
           </el-badge>
         </el-col>
@@ -39,6 +39,9 @@
         name: "message",
       data(){
           return{
+            sysInfoNum:0,
+            ansInfoNum:0,
+            commentNum:0,
             container:[
               {
                 title:'标题一',
@@ -48,29 +51,7 @@
                 title:'标题一',
                 content: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容'
               },
-              {
-                title:'标题一',
-                content: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容'
-              },
-              {
-                title:'标题一',
-                content: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容'
-              },
-              {
-                title:'标题一',
-                content: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容'
-              },
-              {
-                title:'标题一',
-                content: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容'
-              },
-              {
-                title:'标题一',
-                content: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容'
-              },
-
             ],
-
           }
       },
       methods:{

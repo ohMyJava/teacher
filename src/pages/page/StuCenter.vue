@@ -1,7 +1,7 @@
 <template>
     <div style="margin-top: -30px">
       <!-- 分类搜索筛选 -->
-      <el-row style="margin: 10px 0">
+      <el-row style="margin: 10px 0" v-if="this.$store.state.isLogin">
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           辅导科目：<el-input v-model="able" placeholder="请输入筛选条件"></el-input>
         </el-col>

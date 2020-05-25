@@ -104,13 +104,22 @@
       },
       computed:{
           isLogin(){
-            //退出登录后发送请求给后端，清除token相关信息
-            if (sessionStorage.getItem("userName")&&sessionStorage.getItem("userToken")){
-              this.$store.commit("userStatus",sessionStorage.getItem("userName"));
-            } else {
-              this.$store.commit("userName",null);
+            if (localStorage==null) {
+              return this.$store.getters.isLogin;
+            }else {
+              //向后端发送请求，去清空token信息
+              this.$axios.get("/api/user/loginout").then(function (res) {
+                if (res.data.code==="6666"){
+                  this.$message.info(res.data.info)
+                  this.$store.dispatch("clearUser");
+                  return this.$store.getters.isLogin;
+                }else {
+                  this.$message.warning(res.data.info);
+                  return !this.$store.getters.isLogin;
+                }
+              })
+
             }
-            return this.$store.getters.isLogin;
           }
       }
     }
