@@ -28,13 +28,6 @@
 
 <script>
 export default {
-  beforeRouteEnter: (to, from, next) => {
-    //组件内守卫
-    //已登录状态回到登录页面，即登出
-    next(vm => {
-      vm.$store.dispatch("setUser", null);
-    });
-  },
   name: "login",
   data() {
     return {

@@ -88,10 +88,13 @@
           }
       },
       methods:{},
-      beforeEnter(){
-          if (!this.$store.getters.isLogin) {
-            this.$router.push("/login");
+      beforeRouteEnter(to,form,next){
+        next(vm => {
+          console.log(localStorage)
+          if (localStorage.token) {
+            vm.$router.push("/login");
           }
+        });
       },
       components:{
 

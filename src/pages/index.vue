@@ -33,10 +33,10 @@
                       <el-menu-item index="/personCenter">
                         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">个人中心</el-col>
                       </el-menu-item>
-                      <el-menu-item index="/login" v-show="!isLogin">
+                      <el-menu-item index="/login" v-show="isLogin">
                         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">登录/注册</el-col>
                       </el-menu-item>
-                      <el-menu-item index="/login" v-show="isLogin">
+                      <el-menu-item index="/login" v-show="!isLogin">
                         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">[退出]</el-col>
                       </el-menu-item>
                     </el-menu>
@@ -103,12 +103,12 @@
         }
       },
       computed:{
-          isLogin(){
-            if (localStorage==null) {
+          async isLogin(){
+            if (localStorage.token) {
               return this.$store.getters.isLogin;
             }else {
               //向后端发送请求，去清空token信息
-              this.$axios.get("/api/user/loginout").then(function (res) {
+              let res = await this.$axios.get("/api/user/loginout")
                 if (res.data.code==="6666"){
                   this.$message.info(res.data.info)
                   this.$store.dispatch("clearUser");
@@ -117,8 +117,6 @@
                   this.$message.warning(res.data.info);
                   return !this.$store.getters.isLogin;
                 }
-              })
-
             }
           }
       }

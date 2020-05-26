@@ -74,7 +74,7 @@ export default new Router({
             },
             {
               path: "/personCenter/order",
-              name: "order",
+              name: "my-order",
               component: ()=>import("../pages/page/person/order"),
             },
             {

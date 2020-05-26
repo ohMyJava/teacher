@@ -1,7 +1,7 @@
 <template>
  <div style="margin-top: -30px">
    <!-- 分类搜索筛选 -->
-   <el-row style="margin: 10px 0" v-if="this.$store.state.isLogin">
+   <el-row style="margin: 10px 0" v-if="!isLogin">
      <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
        辅导科目：<el-input v-model="able" placeholder="请输入筛选条件"></el-input>
      </el-col>
@@ -59,7 +59,7 @@
          <el-button
            size="mini"
            type="danger"
-           @click="handleDelete(scope.$index, scope.row)">邀请</el-button>
+           @click="handleDelete(scope.$index, scope.row)"v-if="!isLogin">邀请</el-button>
        </template>
      </el-table-column>
    </el-table>
@@ -80,8 +80,26 @@
        <p>兴趣爱好：{{tutorInfo.tutorHobby}}</p>
      </div>
      <span slot="footer" class="dialog-footer">
-             <el-link type="primary" href="/login">登录查看详细信息</el-link>
+             <el-link type="primary" href="/login" v-if="!isLogin">登录查看详细信息</el-link>
             <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+           </span>
+   </el-dialog>
+   <el-dialog
+     :title="'请选择学生'"
+     :visible.sync="dialogVisible1"
+     width="40%"
+     :before-close="handleClose">
+     <el-select v-model="studentValue" placeholder="请选择学生">
+       <el-option
+         v-for="item in studentList"
+         :key="item.id"
+         :label="item.name"
+         :value="item.id">
+       </el-option>
+     </el-select>
+     <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submit">确定</el-button>
+            <el-button type="primary" @click="dialogVisible1 = false">关闭</el-button>
            </span>
    </el-dialog>
    <div class="block">
@@ -104,7 +122,12 @@
         name: "TutorCenter",
       data() {
         return {
+          isLogin:this.$store.getters.isLogin,
+          currentUser:this.$store.getters.currentUser,
+          userId:this.$store.getters.id,
+          studentValue:'',
           dialogVisible:false,
+          dialogVisible1:false,
           tutorList: [],
           tutorInfo:{},
           search: '',
@@ -114,6 +137,8 @@
           able:'',
           school:'',
           location:'',
+          studentList:[],
+          tutorId:'',
         }
       },
       methods: {
@@ -131,9 +156,28 @@
           console.log(row);
         },
         handleDelete(index, row) {
-          confirm("确定要邀请他当您的家教吗")
-          console.log(index, row);
-        //  确认邀请后，显示选择自己绑定的学生信息。以便系统将学生信息发送给家教
+          this.$confirm('是否要成为Ta的家教', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'info'
+          }).then(() => {
+            //  确认邀请后，显示选择自己绑定的学生信息。以便系统将学生信息发送给家教
+            this.tutorId = row.tutorId;
+            let count = this.studentList.length;
+            switch (count) {
+              case 0:
+                this.$message.warning("您还不是学生！");
+                break;
+              case 1:
+                //执行邀请操作
+                let stuId = this.studentList[0].studentId;
+                this.invite(stuId,tutorId,this.userId);
+                break;
+              default:
+                this.dialogVisible1 = true;
+            }
+          }).catch(() => {});
+          this.tutorId='';
         },
         handleSizeChange(val) {
           this.limit=val;
@@ -162,10 +206,38 @@
         async selectOneTutor(id){
           let res=await this.$axios.get('/api/tutorPage/getOneTutor?tutorId='+id);
           this.tutorInfo=res.data.data;
-        }
+        },
+        submit(tutorId,userId){
+          let stuId = this.studentValue;
+          let result = this.invite(stuId,tutorId,userId);
+          if (result === 1){
+            this.dialogVisible1 = false;
+          }
+        },
+        async invite(stuId,tutorId,userId){
+          let form = {};
+          form.stuId=stuId;
+          form.tutorId=tutorId;
+          form.userId=userId;
+          let res =await this.$axios.post(
+            "/api/tutorPage/invited",
+            JSON.stringify(form),
+            {headers:{'content-type':'application-json'}});
+          if (res.data.code === '6666') {
+            this.$message.success(res.data.info);
+            return 1;
+          }else {
+            this.$message.warning("请求出错")
+          }
+        },
       },
       async mounted(){
         this.select();
+      },
+      async created(){
+        //页面加载完后，去请求后端查询该用户是否有学生身份
+        let res = await this.$axios.get('/api/tutorPage/getUserStudent?userName='+this.currentUser);
+        this.studentList = res.data.data;
       }
     }
 </script>
