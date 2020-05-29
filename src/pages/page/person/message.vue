@@ -8,12 +8,12 @@
         </el-col>
         <el-col :sm="4" :xs="4" :md="3" :lg="3" :xl="3">
           <el-badge :value="ansInfoNum" class="item" type="primary">
-            <el-button size="small" @click="this.container=this.replyInfos;this.flag=2">邀请答复</el-button>
+            <el-button size="small" @click="replyInfo;this.container=this.commentInfos;this.flag=2;">邀请答复</el-button>
           </el-badge>
         </el-col>
         <el-col :sm="4" :xs="4" :md="3" :lg="3" :xl="3">
           <el-badge :value="commentNum" class="item" type="warning">
-            <el-button size="small" @click="this.container=this.commentInfos;this.flag=3">留言反馈</el-button>
+            <el-button size="small" @click="commentInfo;this.container=this.commentInfos;this.flag=3;">留言反馈</el-button>
           </el-badge>
         </el-col>
         <!--<el-col :sm="4" :xs="4" :md="3" :lg="3" :xl="3">
@@ -29,14 +29,20 @@
            :value="value">
         <div class="title">{{value.title}}</div>
         <div class="content">
+          {{value.content}}
           <!-- 系统消息内容 -->
-          <div v-if="this.flag=1"></div>
+          <div v-if="this.flag===1"></div>
 
           <!-- 邀请答复内容 -->
-          <div v-if="this.flag=2"></div>
+          <div v-if="this.flag===2&&value.id!==0" >
+            <el-button size="small" @click="agree(value.id,index)" type="primary">同意</el-button>
+            <el-button size="small" @click="refuse(value.id,index)" type="danger">拒绝</el-button>
+          </div>
 
           <!-- 留言反馈内容 -->
-          <div v-if="this.flag=3"></div>
+          <div v-if="this.flag=3&&value.id!==0">
+            <el-button size="small" @click="setIsRead(value.id,index)"></el-button>
+          </div>
 
         </div>
       </div>
@@ -89,18 +95,50 @@
           if (res.data.code === '6666') {
             this.ansInfoNum = res.data.data.length;
             this.replyInfos = res.data.data;
+            this.container=this.replyInfos;
+            this.flag=2
           }else {}
         },
         /* 留言反馈 */
         async commentInfo(){
           let res = await this.$axios.get('/api/person/commentInfo?userId='+userId);
           if (res.data.code === '6666') {
-
+            this.commentInfos = res.data.data;
+            this.commentNum = res.data.data.length();
           }else {}
         },
+        async agree(id,index){
+          let res = await this.$axios.get('/api/person/agree?id='+id);
+          if (res.data.code === '6666') {
+            this.$message.success(res.data.info);
+            //未读数量减一，按钮隐藏
+            this.ansInfoNum -= 1;
+            this.container[index].id=0;
+          }
+        },
+        async refuse(id,index){
+          let res = await this.$axios.get('/api/person/refuse?id='+id);
+          if (res.data.code === '6666') {
+            this.$message.success(res.data.info);
+            //未读数量减一，按钮隐藏
+            this.ansInfoNum -= 1;
+            this.container[index].id=0;
+          }
+        },
+        async setIsRead(id,index){
+          let res = await this.$axios.get('/api/person/setIsRead?id='+id);
+          if (res.data.code === '6666') {
+            this.$message.success(res.data.info);
+            //未读数量减一，按钮隐藏
+            this.commentNum -= 1;
+            this.commentInfos[index].id=0;
+          }
+        }
       },
       created(){
         //获取系统通知条数和内容、新的答复及留言反馈条数
+        this.commentInfo();
+        this.replyInfo();
       }
     }
 </script>

@@ -29,6 +29,7 @@
         name: "EditPersonInfoForm",
       data(){
           return{
+            userId:this.$store.getters.id,
             disable:true,
             form:{},
             rules:{
@@ -53,7 +54,7 @@
           this.$refs['form'].validate(async (valid)=>{
             if (valid) {
               //    从vuex中取得userId
-              this.form.userId=userId;
+              this.form.userId=this.userId;
               let res = await this.$axios.post(
                 "/api/person/updateMyInfo",
                 this.form,
@@ -73,10 +74,9 @@
       },
       async mounted(){
         //  从vuex中获取当前用户id
-        /*let res = await this.$axios.get('/api/person/getMyInfo?userId='+userId);
-        this.form=res.data;*/
-          let res = await this.$axios.get('../../static/json/userInfo.json');
-          this.form=res.data;
+        let res = await this.$axios.get('/api/person/getMyInfo?userId='+this.userId);
+        this.form=res.data;
+
       }
     }
 </script>

@@ -218,9 +218,9 @@
           let form = {};
           form.stuId=stuId;
           form.tutorId=tutorId;
-          form.userId=userId;
+          form.inviteUserId=userId;
           let res =await this.$axios.post(
-            "/api/tutorPage/invited",
+            "/api/tutorPage/invite",
             JSON.stringify(form),
             {headers:{'content-type':'application-json'}});
           if (res.data.code === '6666') {
