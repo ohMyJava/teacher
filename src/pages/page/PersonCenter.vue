@@ -90,8 +90,8 @@
       methods:{},
       beforeRouteEnter(to,form,next){
         next(vm => {
-          console.log(localStorage)
-          if (localStorage.token) {
+          console.log(sessionStorage)
+          if (sessionStorage.token==null) {
             vm.$router.push("/login");
           }
         });

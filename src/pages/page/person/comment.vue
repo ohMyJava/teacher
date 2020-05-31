@@ -36,25 +36,24 @@
               {title:'其他',id:3},
             ],
             rule:{
-              type:[{required:true,message:'请选择留言类型',trigger:'blur'}],
-              content:[{required:true,message:'请输入留言内容',trigger:'blur'}],
+              commentType:[{required:true,message:'请选择留言类型',trigger:'blur'}],
+              commentContent:[{required:true,message:'请输入留言内容',trigger:'blur'}],
             }
           }
       },
       methods:{
         submit(){
-          console.log(this.type);
           this.$refs['form'].validate(async(valid)=>{
             if (valid) {
               //当前id
-              this.form.userId=1;
+              this.form.userId=this.$store.getters.id;
               let res = await this.$axios.post(
                 "/api/person/addComment",
                 JSON.stringify(this.form),
                 {headers:{"content-type":"application/json"}});
               if (res.data.code === "6666") {
                 this.$message.success(res.data.message);
-                this.content='';
+                this.form.commentContent='';
               }else {
                 this.$message.warning(res.data.message);
               }

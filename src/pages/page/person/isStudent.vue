@@ -11,7 +11,7 @@
 
               <el-card class="box-card" shadow="always">
                 <div slot="header" class="clearfix">
-                  <span style="font-weight: bold">学生姓名：{{value.studentName}}||家教姓名{{value.name}}</span>
+                  <span style="font-weight: bold">学生姓名：{{value.studentName}}||家教姓名：{{value.name}}</span>
                 </div>
                 <el-row>
                   <el-col class="title" :xs="7" :sm="7" :md="7" :lg="7" :xl="7">家教年龄：</el-col>
@@ -68,6 +68,7 @@
             flag:false,
             activeNames: 0,
             myTutors:[],
+            userId: this.$store.getters.id,
           }
       },
       methods:{
@@ -83,8 +84,8 @@
       },
       async mounted(){
         //  从vuex全局中获取当前用户id
-        let res = await this.$axios.get('/api/person/getMyTutors?userId='+userId);
-        this.myTutors=res.data;
+        let res = await this.$axios.get('/api/person/getMyTutors?userId='+this.userId);
+        this.myTutors=res.data.data;
         /*let res = await this.$axios.get('../../static/json/myTutor.json');
         this.myTutors=res.data;*/
       }

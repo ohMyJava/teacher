@@ -4,5 +4,6 @@ export const setUser=({commit},{userName,type,token,id})=>{
 };
 
 export const clearUser=({commit})=>{
+  console.log("clear")
   commit("loginOut");
 }

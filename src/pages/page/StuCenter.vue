@@ -1,7 +1,7 @@
 <template>
     <div style="margin-top: -30px">
       <!-- 分类搜索筛选 -->
-      <el-row style="margin: 10px 0" v-if="!isLogin">
+      <el-row style="margin: 10px 0" v-if="isLogin">
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           辅导科目：<el-input v-model="able" placeholder="请输入筛选条件"></el-input>
         </el-col>
@@ -55,7 +55,7 @@
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)" v-if="!isLogin">申请</el-button>
+              @click="handleDelete(scope.$index, scope.row)" v-if="isLogin">申请</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -76,7 +76,7 @@
           <p>学生爱好：{{studentInfo.studentHobby}}</p>
         </div>
         <span slot="footer" class="dialog-footer">
-             <el-link type="primary" href="/login" v-if="isLogin">登录查看详细信息</el-link>
+             <el-link type="primary" href="/login" v-if="!isLogin">登录查看详细信息</el-link>
             <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
            </span>
       </el-dialog>
@@ -230,10 +230,10 @@
       },
       async created(){
           //页面加载完后，去请求后端查询该用户是否有家教身份
-          let res = await this.$axios.get('/api/studentPage/getUserTutor?userName='+this.currentUser);
+          let resp = await this.$axios.get('/api/studentPage/getUserTutor?userName='+this.currentUser);
           // 测试两种方法能否都可以获取到值（后端返回的JSON字符串）
           // this.tutorList = JSON.parse(res.data.data);
-          this.tutorList = res.data.data;
+          this.tutorList = resp.data.data;
       },
     }
 </script>

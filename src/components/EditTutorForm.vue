@@ -94,7 +94,7 @@
       },
       data() {
         return {
-          location:'',
+          location:[],
           message:'',
           options: [],
           list: [],

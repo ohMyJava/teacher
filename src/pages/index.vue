@@ -33,10 +33,10 @@
                       <el-menu-item index="/personCenter">
                         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">个人中心</el-col>
                       </el-menu-item>
-                      <el-menu-item index="/login" v-show="isLogin">
+                      <el-menu-item index="/login" v-show="!isLogin">
                         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">登录/注册</el-col>
                       </el-menu-item>
-                      <el-menu-item index="/login" v-show="!isLogin">
+                      <el-menu-item index="/login" v-show="isLogin">
                         <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">[退出]</el-col>
                       </el-menu-item>
                     </el-menu>
@@ -56,11 +56,13 @@
           <div class="footer">
             <div class="footer-container">
               <h4>链接</h4>
-              <a href="https://www.baidu.com" target="_blank" class="footer-link">有病百度</a>
+              <a href="https://www.baidu.com" target="_blank" class="footer-link">好好学习</a>
+              <a href="https://www.baidu.com" target="_blank" class="footer-link">天天向上</a>
+              <!--<a href="https://www.baidu.com" target="_blank" class="footer-link">有病百度</a>
               <a href="https://www.baidu.com" target="_blank" class="footer-link">艾滋起步</a>
               <a href="https://www.baidu.com" target="_blank" class="footer-link">轻则截肢</a>
               <a href="https://www.baidu.com" target="_blank" class="footer-link">重则入土</a>
-              <a href="https://www.baidu.com" target="_blank" class="footer-link">点我搜病呀</a>
+              <a href="https://www.baidu.com" target="_blank" class="footer-link">点我搜病呀</a>-->
             </div>
             <div class="footer-container">
               <h4>联系方式</h4>
@@ -103,21 +105,24 @@
         }
       },
       computed:{
-          async isLogin(){
-            if (localStorage.token) {
-              return this.$store.getters.isLogin;
+          isLogin(){
+            if (sessionStorage.getItem("username")) {
+              console.log("=======sessionStorage=====================")
+              console.log(sessionStorage)
+              console.log("===========================================")
+              let id = sessionStorage.getItem("id");
+              let userName = sessionStorage.getItem("username");
+              let token = sessionStorage.getItem("token");
+              let type = sessionStorage.getItem("type");
+              this.$store.dispatch("setUser",{userName,type,token,id});
+              console.log("=======修改后的sessionStorage============")
+              console.log(sessionStorage)
+              console.log("===========================================")
             }else {
-              //向后端发送请求，去清空token信息
-              let res = await this.$axios.get("/api/user/loginout")
-                if (res.data.code==="6666"){
-                  this.$message.info(res.data.info)
-                  this.$store.dispatch("clearUser");
-                  return this.$store.getters.isLogin;
-                }else {
-                  this.$message.warning(res.data.info);
-                  return !this.$store.getters.isLogin;
-                }
+              this.$store.dispatch("clearUser");
             }
+            console.log("isLogin:"+this.$store.getters.isLogin)
+            return this.$store.getters.isLogin;
           }
       }
     }

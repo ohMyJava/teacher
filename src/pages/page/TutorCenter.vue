@@ -1,7 +1,7 @@
 <template>
  <div style="margin-top: -30px">
    <!-- 分类搜索筛选 -->
-   <el-row style="margin: 10px 0" v-if="!isLogin">
+   <el-row style="margin: 10px 0" v-if="isLogin">
      <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
        辅导科目：<el-input v-model="able" placeholder="请输入筛选条件"></el-input>
      </el-col>
@@ -59,7 +59,7 @@
          <el-button
            size="mini"
            type="danger"
-           @click="handleDelete(scope.$index, scope.row)"v-if="!isLogin">邀请</el-button>
+           @click="handleDelete(scope.$index, scope.row)"v-if="isLogin">邀请</el-button>
        </template>
      </el-table-column>
    </el-table>
@@ -156,13 +156,14 @@
           console.log(row);
         },
         handleDelete(index, row) {
-          this.$confirm('是否要成为Ta的家教', '提示', {
+          this.$confirm('是否要成为Ta的学生', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'info'
           }).then(() => {
             //  确认邀请后，显示选择自己绑定的学生信息。以便系统将学生信息发送给家教
             this.tutorId = row.tutorId;
+            console.log(this.tutorId)
             let count = this.studentList.length;
             switch (count) {
               case 0:
@@ -170,8 +171,8 @@
                 break;
               case 1:
                 //执行邀请操作
-                let stuId = this.studentList[0].studentId;
-                this.invite(stuId,tutorId,this.userId);
+                let stuId = this.studentList[0].id;
+                this.invite(stuId,this.tutorId,this.userId);
                 break;
               default:
                 this.dialogVisible1 = true;
@@ -222,22 +223,22 @@
           let res =await this.$axios.post(
             "/api/tutorPage/invite",
             JSON.stringify(form),
-            {headers:{'content-type':'application-json'}});
+            {headers:{'content-type':'application/json'}});
           if (res.data.code === '6666') {
-            this.$message.success(res.data.info);
+            this.$message.success(res.data.message);
             return 1;
           }else {
             this.$message.warning("请求出错")
           }
         },
       },
-      async mounted(){
+      mounted(){
         this.select();
       },
       async created(){
         //页面加载完后，去请求后端查询该用户是否有学生身份
-        let res = await this.$axios.get('/api/tutorPage/getUserStudent?userName='+this.currentUser);
-        this.studentList = res.data.data;
+        let resp = await this.$axios.get('/api/tutorPage/getUserStudent?userName='+this.currentUser);
+        this.studentList = resp.data.data;
       }
     }
 </script>

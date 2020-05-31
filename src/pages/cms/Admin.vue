@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       menuIconClass: "el-icon-s-fold",
-      menuShow: true,
+      menuShow: false,
       menus: [
         {
           index: "0",
@@ -123,6 +123,15 @@ export default {
     menuWidth() {
       return this.menuShow ? "65px" : "160px";
     }
+  },
+  beforeRouteEnter(to, form, next) {
+    next(vm => {
+      // 通过 `vm` 访问组件实例
+      if (vm.$store.getters.type !== "2") {
+        next('/login')
+      }else {
+      }
+    })
   }
 };
 </script>

@@ -24,8 +24,8 @@ Vue.prototype.$axios = axios;
 // http request拦截器 添加一个请求拦截器
 axios.interceptors.request.use(function (config) {
 
-  let token = localStorage.getItem("token");
-  let userName = localStorage.getItem("userName");
+  let token = sessionStorage.getItem("token");
+  let userName = sessionStorage.getItem("username");
 
   config.headers.token = token;
   config.headers.userName = userName;

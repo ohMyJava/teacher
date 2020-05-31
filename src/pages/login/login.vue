@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="!this.$store.getters.isLogin">
     <el-row>
       <el-col :xs="0" :sm="10" :md="10" :lg="10" :xl="10">&nbsp;</el-col>
       <el-col :xs="24" :sm="14" :md="14" :lg="14" :xl="14" class="login-box">
@@ -34,7 +34,7 @@ export default {
       form: {
         username: "",
         password: "",
-        type: ""
+        type: "1"
       },
       rules: {
         username: [
@@ -81,7 +81,12 @@ export default {
             console.log(type)
             console.log(token)
 
-            this.$store.dispatch("setUser",{userName,type,token});
+            this.$store.dispatch("setUser",{userName,type,token,id});
+            //将信息存入本地
+            sessionStorage.setItem("username",userName);
+            sessionStorage.setItem("token",token);
+            sessionStorage.setItem("type",type);
+            sessionStorage.setItem("id",id);
 
             //打印login状态
             console.log(this.$store.state.isLogin);
@@ -91,9 +96,10 @@ export default {
             } else if (type === "2") {
               this.$router.push("/admin");
             }
+          }else {
+            this.$message.warning(ret.data.message)
           }
         } else {
-          alert("failed");
           return false;
         }
       });
@@ -105,7 +111,39 @@ export default {
       });
       window.open(routerUrl.href, "_blank");
     }
-  }
+  },
+  beforeRouteEnter:(to,from,next)=>{
+    //组件内守卫
+    //已登录状态回到登录页面，即登出
+    next(vm=>{
+      if (sessionStorage.getItem("username")){
+        vm.$confirm("确定要退出吗？",'提示',{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=>{
+          //向后端发送请求，去清空token信息
+          vm.$axios.get("/api/user/loginout").then(function (res) {
+            if (res.data.code==="6666"){
+              vm.$store.dispatch("clearUser");
+              vm.$message({
+                type: 'success',
+                message: '退出成功！'
+              });
+            }else {
+              vm.$message({
+                type: 'warning',
+                message: '退出失败！'
+              });
+            }
+          })
+        }).catch(()=>{
+
+        })
+
+      }
+    });
+  },
 };
 </script>
 

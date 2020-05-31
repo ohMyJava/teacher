@@ -14,7 +14,7 @@
           :data="orderData"
           tooltip-effect="dark"
           style="width: 100%"
-          :max-height="400"
+          height="400"
           :row-style="{height:'20px'}"
           :cell-style="{padding:'5px 0'}"
           size="medium"
@@ -38,18 +38,6 @@
           <el-table-column
             prop="tutorName"
             label="家教姓名">
-          </el-table-column>
-          <el-table-column
-            prop="cost"
-            label="价格">
-          </el-table-column>
-          <el-table-column
-            align="right">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">不知道啥操作</el-button>
-            </template>
           </el-table-column>
         </el-table>
       </el-row>
@@ -75,51 +63,7 @@
           return{
             condition:'',
             multipleSelection:[],
-            orderData: [
-              {
-                serial:'0001',
-                time:'2020-04-24',
-                studentName:'张三',
-                tutorName:'家教',
-                cost:'￥90'
-              },
-              {
-                serial:'0001',
-                time:'2020-04-24',
-                studentName:'张三',
-                tutorName:'家教',
-                cost:'￥90'
-              },
-              {
-                serial:'0001',
-                time:'2020-04-24',
-                studentName:'张三',
-                tutorName:'家教',
-                cost:'￥90'
-              },
-              {
-                serial:'0001',
-                time:'2020-04-24',
-                studentName:'张三',
-                tutorName:'家教',
-                cost:'￥90'
-              },
-              {
-                serial:'0001',
-                time:'2020-04-24',
-                studentName:'张三',
-                tutorName:'家教',
-                cost:'￥90'
-              },
-              {
-                serial:'0001',
-                time:'2020-04-24',
-                studentName:'张三',
-                tutorName:'家教',
-                cost:'￥90'
-              },
-
-            ],
+            orderData: [],
             total: 0,
             currentPage: 1,
             limit: 10,
@@ -139,21 +83,17 @@
           this.currentPage = val;
           this.select();
         },
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(_ => {
-              done();
-            })
-            .catch(_ => {});
-        },
-        handleEdit(index, row) {
-          this.$message.info("按钮：你点击了我！真厉害！")
-        },
         async select(){
-          let res=await this.$axios.post('/api/order/getOrders',{limit:this.limit,page:this.currentPage,condition:this.condition},{headers:{"content-type":"application/json"}})
+          let res=await this.$axios.get('/api/order/getOrders?limit='+this.limit+
+            "&page="+this.currentPage+
+            "&condition="+this.condition)
           this.orderData=res.data.data;
-          this.total=res.data.data.length;
-        }
+          let resp = await this.$axios.get('/api/order/getOrdersNum?condition='+this.condition);
+          this.total = resp.data.data;
+        },
+      },
+      created(){
+          this.select();
       }
     }
 </script>

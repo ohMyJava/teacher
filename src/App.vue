@@ -13,13 +13,20 @@
 export default {
   name: 'App',
   created(){
-    if (localStorage) {
-      let token = localStorage.getItem("token");
-      let type = localStorage.getItem("type");
-      let username = localStorage.getItem("username");
-      this.$store.dispatch("setUser",{username,type,token});
+    if (sessionStorage) {
+      let token = sessionStorage.getItem("token");
+      let type = sessionStorage.getItem("type");
+      let username = sessionStorage.getItem("username");
+      let id = sessionStorage.getItem("id")
+      this.$store.dispatch("setUser",{username,type,token,id});
     }
-  }
+  },
+  mounted: function () {
+    //此方法刷新页面时也会执行
+   /* window.addEventListener('beforeunload',()=>{
+      localStorage.removeItem('token');
+    });*/
+  },
 }
 </script>
 
@@ -30,6 +37,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-
 }
 </style>
