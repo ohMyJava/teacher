@@ -4,8 +4,8 @@
         <el-form-item label="用户账号">
           <el-input v-model="form.userName" disabled></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" show-password></el-input>
+        <el-form-item label="密码（修改资料时请重新输入密码）" prop="password">
+          <el-input v-model="form.password" show-password placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item label="真实姓名" prop="name">
           <el-input v-model="form.name"></el-input>
@@ -76,7 +76,6 @@
         //  从vuex中获取当前用户id
         let res = await this.$axios.get('/api/person/getMyInfo?userId='+this.userId);
         this.form=res.data.data;
-
       }
     }
 </script>

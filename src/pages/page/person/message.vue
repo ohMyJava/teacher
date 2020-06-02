@@ -136,40 +136,51 @@
           }
         },
         async agree(id,index){
+          let that = this;
           let res = await this.$axios.get('/api/person/agree?id='+id);
           if (res.data.code === '6666') {
-            this.$message.success(res.data.info);
+            that.$message.success(res.data.message);
             //未读数量减一，按钮隐藏
+            this.ansInfoNum = this.ansInfoNum -1;
             this.container[index].id=0;
+            this.container.splice(index);
+            this.total = this.total-1;
           }
         },
         async refuse(id,index){
+          let that = this;
           let res = await this.$axios.get('/api/person/refuse?id='+id);
           if (res.data.code === '6666') {
-            this.$message.success(res.data.info);
+            that.$message.success(res.data.message);
             //未读数量减一，按钮隐藏
-            this.container.splice(index);
+            this.ansInfoNum = this.ansInfoNum -1;
             this.container[index].id=0;
-
+            this.container.splice(index);
+            this.total = this.total-1;
           }
         },
         async setIsRead(id,index){
+          let that = this;
           let res = await this.$axios.get('/api/person/setIsRead?id='+id);
           if (res.data.code === '6666') {
-            this.$message.success(res.data.info);
+            that.$message.success(res.data.message);
             //未读数量减一，按钮隐藏
+            this.commentNum = this.commentNum -1;
             this.container[index].id=0;
             this.container.splice(index);
+            this.total = this.total-1;
           }
         },
         async setInviteInfoIsRead(id,index){
+          let that = this;
           let res = await this.$axios.get('/api/person/setInviteInfoIsRead?id='+id);
           if (res.data.code === '6666') {
-            this.$message.success(res.data.info);
+            that.$message.success(res.data.message);
             //未读数量减一，按钮隐藏
             this.ansInfoNum =this.ansInfoNum - 1;
             this.container[index].id=0;
             this.container.splice(index);
+            this.total = this.total-1;
           }
         }
       },
@@ -177,7 +188,7 @@
         //获取系统通知条数和内容、新的答复及留言反馈条数
         this.commentInfo();
         this.replyInfo();
-      }
+      },
     }
 </script>
 

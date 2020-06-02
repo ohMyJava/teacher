@@ -6,7 +6,7 @@
         :class="menuIconClass"
         style="float: left; line-height: 60px"
       ></i>
-      <span style="margin-right: 10px">管理员用户名</span>
+      <el-link @click="open"><span style="margin-right: 10px">【退出】</span></el-link>
       <i class="el-icon-remove-outline" style="margin-right: 15px"></i>
     </el-header>
     <el-container style="height: 100%">
@@ -58,6 +58,7 @@ export default {
   name: "Admin",
   data() {
     return {
+      adminUserName:this.$store.getters.currentUser,
       menuIconClass: "el-icon-s-fold",
       menuShow: false,
       menus: [
@@ -97,12 +98,12 @@ export default {
               name: "角色管理",
               link: "/admin/systemEdit"
             },
-            {
+            /*{
               index: "4-2",
               icon: "el-icon-reading",
               name: "操作日志",
               link: "/admin/systemLog"
-            },
+            },*/
             {
               index: "4-3",
               icon: "el-icon-chat-line-round",
@@ -117,6 +118,35 @@ export default {
   methods: {
     showMenu() {
       this.menuShow = !this.menuShow;
+    },
+    open(){
+      let that = this;
+      this.$confirm('是否要退出当前系统？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.$axios.get("/api/user/loginout").then(function (res) {
+          if (res.data.code==="6666"){
+            that.$store.dispatch("clearUser");
+            that.$message({
+              type: 'success',
+              message: '退出成功！'
+            });
+            that.$router.push('/login')
+          }else {
+            that.$message({
+              type: 'warning',
+              message: '退出失败！'
+            });
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     }
   },
   computed: {

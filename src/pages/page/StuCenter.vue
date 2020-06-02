@@ -120,7 +120,7 @@
         return {
           isLogin:this.$store.getters.isLogin,
           currentUser:this.$store.getters.currentUser,
-          id:this.$store.getters.id,
+          userId:this.$store.getters.id,
           tutorValue:'',
           dialogVisible:false,
           dialogVisible1:false,
@@ -165,8 +165,8 @@
                 break;
               case 1:
                 //执行邀请操作
-                let tutorId = this.tutorList[0].tutorId;
-                this.invite(stuId,tutorId,userId);
+                let tutorId = this.tutorList[0].id;
+                this.submit(this.stuId,tutorId,this.userId);
                 break;
               default:
                 this.dialogVisible1 = true;
@@ -176,9 +176,11 @@
         },
         handleSizeChange(val) {
           this.limit=val;
+          this.select();
         },
         handleCurrentChange(val) {
           this.currentPage = val;
+          this.select();
         },
         async select(){
           let res=await this.$axios.post(
@@ -201,14 +203,14 @@
           let res=await this.$axios.get('/api/studentPage/getOneStudent?studentId='+id);
           this.studentInfo=res.data.data;
         },
-        submit(){
-          let tutorId = this.tutorValue;
-          let result = this.invite(this.stuId,tutorId,userId);
+        submit(stuId,tutorId,userId){
+          let result = this.invite(stuId,tutorId,userId);
           if (result === 1){
             this.dialogVisible1 = false;
           }
         },
         async invite(stuId,tutorId,userId){
+          let that = this;
           let form = {};
           form.stuId=stuId;
           form.tutorId=tutorId;
@@ -216,12 +218,12 @@
           let res =await this.$axios.post(
             "/api/studentPage/invite",
             JSON.stringify(form),
-            {headers:{'content-type':'application-json'}});
+            {headers:{'content-type':'application/json'}});
           if (res.data.code === '6666') {
-            this.$message.success(res.data.info);
+            that.$message.success(res.data.message);
             return 1;
           }else {
-            this.$message.warning("请求出错")
+            that.$message.warning("请求出错")
           }
         },
       },
@@ -234,6 +236,7 @@
           // 测试两种方法能否都可以获取到值（后端返回的JSON字符串）
           // this.tutorList = JSON.parse(res.data.data);
           this.tutorList = resp.data.data;
+          console.log(this.tutorList)
       },
     }
 </script>

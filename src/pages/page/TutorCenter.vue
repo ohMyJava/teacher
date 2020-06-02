@@ -172,7 +172,8 @@
               case 1:
                 //执行邀请操作
                 let stuId = this.studentList[0].id;
-                this.invite(stuId,this.tutorId,this.userId);
+                this.submit(stuId,this.tutorId,this.userId);
+                //this.invite(stuId,this.tutorId,this.userId);
                 break;
               default:
                 this.dialogVisible1 = true;
@@ -208,14 +209,15 @@
           let res=await this.$axios.get('/api/tutorPage/getOneTutor?tutorId='+id);
           this.tutorInfo=res.data.data;
         },
-        submit(tutorId,userId){
-          let stuId = this.studentValue;
+        submit(stuId,tutorId,userId){
+          // let stuId = this.studentValue;
           let result = this.invite(stuId,tutorId,userId);
           if (result === 1){
             this.dialogVisible1 = false;
           }
         },
         async invite(stuId,tutorId,userId){
+          let that = this;
           let form = {};
           form.stuId=stuId;
           form.tutorId=tutorId;
@@ -225,10 +227,10 @@
             JSON.stringify(form),
             {headers:{'content-type':'application/json'}});
           if (res.data.code === '6666') {
-            this.$message.success(res.data.message);
+            that.$message.success(res.data.message);
             return 1;
           }else {
-            this.$message.warning("请求出错")
+            that.$message.warning("请求出错")
           }
         },
       },
