@@ -105,7 +105,6 @@ export default {
       });
     },
     reg: function() {
-      alert("正在打开注册页面！");
       let routerUrl = this.$router.resolve({
         path: "/reg"
       });

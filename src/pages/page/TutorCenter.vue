@@ -163,11 +163,12 @@
           }).then(() => {
             //  确认邀请后，显示选择自己绑定的学生信息。以便系统将学生信息发送给家教
             this.tutorId = row.tutorId;
-            console.log(this.tutorId)
+            let that = this;
             let count = this.studentList.length;
+            console.log(this.tutorList)
             switch (count) {
               case 0:
-                this.$message.warning("您还不是学生！");
+                that.$message.warning("您还不是学生！");
                 break;
               case 1:
                 //执行邀请操作
@@ -240,7 +241,11 @@
       async created(){
         //页面加载完后，去请求后端查询该用户是否有学生身份
         let resp = await this.$axios.get('/api/tutorPage/getUserStudent?userName='+this.currentUser);
-        this.studentList = resp.data.data;
+        if (resp.data.code === '6666'){
+          this.studentList = resp.data.data;
+        } else {
+          this.studentList = [];
+        }
       }
     }
 </script>
